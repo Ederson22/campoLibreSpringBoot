@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Usuario</title>
+</head>
+<body>
+<h2>Registro de Usuario</h2>
+
+<form th:action="@{/register}" th:object="${usuario}" method="post">
+    <div>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" th:field="*{nombre}" required>
+        <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" required>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+    </div>
+    <div>
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" id="contrasena" th:field="*{contrasena}" required>
+        <span th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></span>
+    </div>
+    <div>
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" th:field="*{telefono}" required>
+        <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+    </div>
+    <div>
+        <label for="tipoDocumento">Tipo de Documento:</label>
+        <select id="tipoDocumento" th:field="*{tipoDocumento}" required>
+            <option value="">Selecciona un tipo</option>
+            <option value="C.C.">C.C. (Cédula de Ciudadanía)</option>
+            <option value="T.I.">T.I. (Tarjeta de Identidad)</option>
+            <option value="Pasaporte">Pasaporte</option>
+            <option value="C.E.">C.E. (Cédula de Extranjería)</option>
+        </select>
+        <span th:if="${#fields.hasErrors('tipoDocumento')}" th:errors="*{tipoDocumento}"></span>
+    </div>
+    <div>
+        <label for="documento">Documento:</label>
+        <input type="text" id="documento" th:field="*{documento}" required>
+        <span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"></span>
+    </div>
+    <div>
+        <label for="idRol">Rol:</label>
+        <select id="idRol" th:field="*{idRol}" required>
+            <option value="">Selecciona un rol</option>
+            <option th:each="rol : ${roles}" th:value="${rol.idRol}" th:text="${rol.nombre}"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('idRol')}" th:errors="*{idRol}"></span>
+    </div>
+    <div>
+        <button type="submit">Registrar</button>
+    </div>
+</form>
+</body>
+</html>

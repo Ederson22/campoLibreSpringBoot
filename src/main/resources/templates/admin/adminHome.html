@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Administración</title>
+</head>
+<body>
+<h1>¡Bienvenido, Administrador!</h1>
+<p>Esta es tu página de inicio. Solo los usuarios con el rol de **ADMINISTRADOR** pueden acceder aquí.</p>
+
+<div sec:authorize="isAuthenticated()">
+  <p>Has iniciado sesión como: <span sec:authentication="name"></span></p>
+  <p>Tu rol es: <span sec:authentication="authorities"></span></p>
+</div>
+
+<br/>
+<form th:action="@{/logout}" method="post">
+  <button type="submit">Cerrar Sesión</button>
+</form>
+</body>
+</html>

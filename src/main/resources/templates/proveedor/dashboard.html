@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard del Proveedor</title>
+</head>
+<body>
+<h1>¡Felicidades!</h1>
+<h2>Tu tienda ha sido creada exitosamente.</h2>
+<p>Bienvenido a tu panel de control. Desde aquí podrás gestionar tus productos, pedidos y la información de tu tienda.</p>
+
+<ul>
+    <li><a th:href="@{/proveedor/tienda/ver}">Ver mi tienda</a></li>
+    <li><a th:href="@{/proveedor/productos}">Gestionar productos</a></li>
+    <li><a th:href="@{/proveedor/eventos}" class="btn btn-info">Gestionar Eventos</a></li>
+</ul>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar Sesión</button>
+</form>
+</body>
+</html>

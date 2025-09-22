@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel del Proveedor</title>
+</head>
+<body>
+<h1>Bienvenido, <span th:text="${#authentication.name}"></span>!</h1>
+<p>Este es tu panel de control como proveedor. Aquí podrás gestionar tu tienda y productos.</p>
+
+<h2>Gestión de Tienda</h2>
+<ul>
+    <li th:if="${!tieneTienda}">
+        <a th:href="@{/proveedor/tienda/crear}">Crear mi tienda</a>
+    </li>
+    <li th:if="${tieneTienda}">
+        <a th:href="@{/proveedor/tienda/ver}">Ver mi tienda</a>
+    </li>
+</ul>
+
+<h2>Gestión de Productos</h2>
+<ul>
+    <li>
+        <a th:href="@{/proveedor/productos}">Gestionar Productos</a>
+    </li>
+</ul>
+
+<h2>Comunicación con el Administrador</h2>
+<ul>
+    <li>
+        <a th:href="@{/proveedor/pqrs}">PQRS</a>
+    </li>
+</ul>
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar Sesión</button>
+</form>
+</body>
+</html>

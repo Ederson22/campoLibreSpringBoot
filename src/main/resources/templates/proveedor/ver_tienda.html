@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Tienda</title>
+</head>
+<body>
+<h1>Información de la Tienda</h1>
+
+<div th:if="${tienda != null}">
+    <h2>Detalles de la Tienda</h2>
+    <p><strong>Nombre:</strong> <span th:text="${tienda.nombre}"></span></p>
+    <p><strong>Descripción:</strong> <span th:text="${tienda.descripcion}"></span></p>
+    <p><strong>Correo Electrónico:</strong> <span th:text="${tienda.correoTienda}"></span></p>
+    <p><strong>Teléfono:</strong> <span th:text="${tienda.telefonoTienda}"></span></p>
+    <p><strong>Ubicación:</strong> <span th:text="${tienda.ubicacion}"></span></p>
+    <p><strong>Estado:</strong> <span th:text="${tienda.estado}"></span></p>
+
+    <div th:if="${tienda.imagenTienda != null}">
+        <img th:src="@{${tienda.imagenTienda}}" alt="Imagen de la tienda" style="max-width: 300px;">
+    </div>
+
+    <br/>
+    <a th:href="@{/proveedor/tienda/editar}">Editar Tienda</a>
+    <a th:href="@{/proveedor/tienda/eliminar}"
+       onclick="return confirm('¿Estás seguro de que quieres eliminar tu tienda? Esta acción es irreversible.');">Eliminar Tienda</a>
+</div>
+
+<div th:if="${tienda == null}">
+    <p>No se encontró la información de la tienda.</p>
+</div>
+
+<br/>
+<a th:href="@{/proveedor/dashboard}">Volver al Dashboard</a>
+</body>
+</html>

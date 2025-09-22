@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Consumidor</title>
+</head>
+<body>
+<h1>¡Hola, Consumidor!</h1>
+<p>Bienvenido a tu página de inicio. Aquí podrás ver productos y eventos.</p>
+
+<div sec:authorize="isAuthenticated()">
+    <p>Has iniciado sesión como: <span sec:authentication="name"></span></p>
+    <p>Tu rol es: <span sec:authentication="authorities"></span></p>
+</div>
+
+<br/>
+<a href="/logout">Cerrar Sesión</a>
+</body>
+</html>

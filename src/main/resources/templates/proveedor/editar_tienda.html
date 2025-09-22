@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Tienda</title>
+</head>
+<body>
+<h1>Editar Información de la Tienda</h1>
+
+<form th:action="@{/proveedor/tienda/editar}" th:object="${tienda}" method="post">
+  <div>
+    <label for="nombre">Nombre de la Tienda:</label>
+    <input type="text" id="nombre" th:field="*{nombre}">
+    <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+  </div>
+  <div>
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" th:field="*{descripcion}"></textarea>
+    <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
+  </div>
+  <div>
+    <label for="correoTienda">Correo Electrónico:</label>
+    <input type="email" id="correoTienda" th:field="*{correoTienda}">
+    <span th:if="${#fields.hasErrors('correoTienda')}" th:errors="*{correoTienda}"></span>
+  </div>
+  <div>
+    <label for="telefonoTienda">Teléfono:</label>
+    <input type="text" id="telefonoTienda" th:field="*{telefonoTienda}">
+    <span th:if="${#fields.hasErrors('telefonoTienda')}" th:errors="*{telefonoTienda}"></span>
+  </div>
+  <div>
+    <label for="ubicacion">Ubicación:</label>
+    <input type="text" id="ubicacion" th:field="*{ubicacion}">
+    <span th:if="${#fields.hasErrors('ubicacion')}" th:errors="*{ubicacion}"></span>
+  </div>
+  <div>
+    <label for="imagenTienda">URL de la Imagen:</label>
+    <input type="text" id="imagenTienda" th:field="*{imagenTienda}">
+    <span th:if="${#fields.hasErrors('imagenTienda')}" th:errors="*{imagenTienda}"></span>
+  </div>
+  <button type="submit">Guardar Cambios</button>
+</form>
+
+<br/>
+<a th:href="@{/proveedor/tienda/ver}">Cancelar</a>
+</body>
+</html>

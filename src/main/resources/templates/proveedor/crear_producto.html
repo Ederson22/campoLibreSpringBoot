@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Producto</title>
+</head>
+<body>
+<h1>Crear Producto</h1>
+<form th:action="@{/proveedor/productos/crear}" th:object="${producto}" method="post">
+  <div>
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" th:field="*{nombre}" />
+    <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+  </div>
+  <div>
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" th:field="*{descripcion}"></textarea>
+    <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
+  </div>
+  <div>
+    <label for="precio">Precio:</label>
+    <input type="number" step="0.01" id="precio" th:field="*{precio}" />
+    <span th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></span>
+  </div>
+  <div>
+    <label for="stock">Stock:</label>
+    <input type="number" id="stock" th:field="*{stock}" />
+    <span th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"></span>
+  </div>
+  <div>
+    <label for="categoria">Categoría:</label>
+    <select id="categoria" th:field="*{categoria}">
+      <option value="">-- Seleccionar Categoría --</option>
+      <option value="Frutas">Frutas</option>
+      <option value="Verduras">Verduras</option>
+      <option value="Lácteos">Lácteos</option>
+      <option value="Carnes">Carnes</option>
+    </select>
+  </div>
+  <div>
+    <label for="imagen_producto">URL de la Imagen:</label>
+    <input type="text" id="imagen_producto" th:field="*{imagen_producto}" />
+  </div>
+  <button type="submit">Guardar Producto</button>
+</form>
+</body>
+</html>

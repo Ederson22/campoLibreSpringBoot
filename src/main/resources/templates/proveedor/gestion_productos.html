@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Productos</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    form { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+    label, input, select, button { margin-right: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    a { text-decoration: none; color: #007bff; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<h1>Mis Productos</h1>
+
+<form th:action="@{/proveedor/productos}" method="get">
+  <label for="nombre">Nombre:</label>
+  <input type="text" id="nombre" name="nombre" th:value="${param.nombre}">
+
+  <label for="categoria">Categoría:</label>
+  <select id="categoria" name="categoria">
+    <option value="">-- Seleccionar Categoría --</option>
+    <option value="Frutas" th:selected="${param.categoria == 'Frutas'}">Frutas</option>
+    <option value="Verduras" th:selected="${param.categoria == 'Verduras'}">Verduras</option>
+    <option value="Lácteos" th:selected="${param.categoria == 'Lácteos'}">Lácteos</option>
+  </select>
+
+  <label for="stock">Stock Máximo:</label>
+  <input type="number" id="stock" name="stock" th:value="${param.stock}">
+
+  <button type="submit">Buscar</button>
+  <a th:href="@{/proveedor/productos}" style="margin-left: 10px;">Limpiar Filtros</a>
+</form>
+
+<a th:href="@{/proveedor/productos/crear}">Crear nuevo producto</a>
+<br/><br/>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Precio</th>
+    <th>Stock</th>
+    <th>Categoría</th>
+    <th>Acciones</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="producto : ${productos}">
+    <td th:text="${producto.idProducto}"></td>
+    <td th:text="${producto.nombre}"></td>
+    <td th:text="${producto.precio}"></td>
+    <td th:text="${producto.stock}"></td>
+    <td th:text="${producto.categoria}"></td>
+    <td>
+      <a th:href="@{'/proveedor/productos/editar/' + ${producto.idProducto}}">Editar</a>
+      <a th:href="@{'/proveedor/productos/eliminar/' + ${producto.idProducto}}" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Eliminar</a>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

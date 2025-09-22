@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de PQRS</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Mis PQRS</h1>
+    <a th:href="@{/proveedor/pqrs/crear}" class="btn btn-primary mb-3">Crear nueva PQRS</a>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Fecha de Envío</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pqrs : ${pqrsList}">
+            <td th:text="${pqrs.idPqrs}"></td>
+            <td th:text="${pqrs.tipo}"></td>
+            <td th:text="${pqrs.descripcion}"></td>
+            <td th:text="${pqrs.fecha_envio}"></td>
+            <td th:text="${pqrs.estado}"></td>
+            <td th:if="${pqrs.estado.toString() == 'PENDIENTE'}">
+                <a th:href="@{/proveedor/pqrs/ver/{id}(id=${pqrs.idPqrs})}" class="btn btn-info btn-sm">Ver</a>
+                <a th:href="@{/proveedor/pqrs/editar/{id}(id=${pqrs.idPqrs})}" class="btn btn-warning btn-sm">Editar</a>
+                <a th:href="@{/proveedor/pqrs/cancelar/{id}(id=${pqrs.idPqrs})}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('¿Estás seguro de que deseas cancelar esta PQRS?');">Cancelar</a>
+            </td>
+            <td th:if="${pqrs.estado.toString() != 'PENDIENTE'}">
+                <a th:href="@{/proveedor/pqrs/ver/{id}(id=${pqrs.idPqrs})}" class="btn btn-info btn-sm">Ver</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/proveedor/dashboard}" class="btn btn-secondary">Volver al Dashboard</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Tienda</title>
+</head>
+<body>
+<h2>Crear Mi Tienda</h2>
+
+<form th:action="@{/proveedor/tienda/crear}" th:object="${tienda}" method="post">
+  <div>
+    <label>Nombre de la tienda</label>
+    <input type="text" th:field="*{nombre}" />
+  </div>
+
+  <div>
+    <label>Descripción</label>
+    <textarea th:field="*{descripcion}"></textarea>
+  </div>
+
+  <div>
+    <label>Correo de la Tienda</label>
+    <input type="email" th:field="*{correoTienda}" />
+  </div>
+
+  <div>
+    <label>Teléfono de la Tienda</label>
+    <input type="text" th:field="*{telefonoTienda}" />
+  </div>
+
+  <div>
+    <label>Ubicación</label>
+    <input type="text" th:field="*{ubicacion}" />
+  </div>
+
+  <div>
+    <label>URL de la Imagen</label>
+    <input type="text" th:field="*{imagenTienda}" />
+  </div>
+
+  <button type="submit">Crear Tienda</button>
+</form>
+</body>
+</html>

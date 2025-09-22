@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Enviar PQRS</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h2>Enviar PQRS al Administrador</h2>
+            <form th:action="@{/proveedor/pqrs/guardar}" th:object="${pqrsDto}" method="post">
+
+                <div class="form-group">
+                    <label for="tipo">Tipo de PQRS:</label>
+                    <select id="tipo" th:field="*{tipo}" class="form-control">
+                        <option value="">-- Seleccione un tipo --</option>
+                        <option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="${tipo}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="idTienda">Tienda (opcional):</label>
+                    <select id="idTienda" th:field="*{idTienda}" class="form-control">
+                        <option value="">-- Seleccione una tienda --</option>
+                        <option th:each="tienda : ${tiendas}" th:value="${tienda.idTienda}" th:text="${tienda.nombre}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="idEvento">Evento (opcional):</label>
+                    <select id="idEvento" th:field="*{idEvento}" class="form-control">
+                        <option value="">-- Seleccione un evento --</option>
+                        <option th:each="evento : ${eventos}" th:value="${evento.idEvento}" th:text="${evento.nombre}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" th:field="*{descripcion}" class="form-control" rows="5"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Enviar PQRS</button>
+                <a th:href="@{/proveedor/dashboard}" class="btn btn-secondary ml-2">Volver al Dashboard</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
