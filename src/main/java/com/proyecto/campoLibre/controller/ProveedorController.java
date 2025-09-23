@@ -4,6 +4,7 @@ import com.proyecto.campoLibre.dto.EventoDto;
 import com.proyecto.campoLibre.dto.PqrsDto;
 import com.proyecto.campoLibre.dto.ProductoDto;
 import com.proyecto.campoLibre.dto.TiendaDto;
+import com.proyecto.campoLibre.entity.EstadoEvento;
 import com.proyecto.campoLibre.entity.*;
 import com.proyecto.campoLibre.repository.EventoRepository;
 import com.proyecto.campoLibre.repository.TiendaRepository;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/proveedor")
@@ -343,35 +345,192 @@ public class ProveedorController {
 
 
     //___________________________________EVENTOS_________________________________
+    @GetMapping("/eventos")
+    public String gestionEventos(Model model, Authentication authentication,
+                                 @RequestParam(name = "nombre", required = false) String nombre,
+                                 @RequestParam(name = "tipo", required = false) TipoEvento tipo,
+                                 @RequestParam(name = "ubicacion", required = false) String ubicacion,
+                                 @RequestParam(name = "estado", required = false) EstadoEvento estado) {
+
+        String email = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Obtener solo los eventos creados por este proveedor
+        List<Evento> eventos;
+
+        if (nombre != null || tipo != null || ubicacion != null || estado != null) {
+            // Si hay filtros, buscar con filtros pero solo del usuario actual
+            eventos = eventoService.buscarEventosConFiltros(nombre, tipo, ubicacion, null, null, estado)
+                    .stream()
+                    .filter(evento -> evento.getCreadoPor().getIdUsuario().equals(usuario.getIdUsuario()))
+                    .collect(Collectors.toList());
+        } else {
+            // Sin filtros, obtener todos los eventos del proveedor
+            eventos = eventoService.obtenerEventosPorCreador(usuario.getIdUsuario());
+        }
+
+        model.addAttribute("eventos", eventos);
+        model.addAttribute("tiposEvento", TipoEvento.values());
+        model.addAttribute("estadosEvento", EstadoEvento.values());
+        return "proveedor/gestion_eventos";
+    }
+
     @GetMapping("/eventos/crear")
     public String crearEvento(Model model) {
-        // Ahora pasas un EventoDto al modelo
         model.addAttribute("evento", new EventoDto());
         model.addAttribute("tiposEvento", TipoEvento.values());
         return "proveedor/crear_evento";
     }
 
     @PostMapping("/eventos/guardar")
-    public String guardarEvento(@ModelAttribute EventoDto eventoDto, Authentication authentication) {
+    public String guardarEvento(@Valid @ModelAttribute("evento") EventoDto eventoDto,
+                                BindingResult result,
+                                Authentication authentication,
+                                Model model) {
 
-        // Obten el usuario creador
+        if (result.hasErrors()) {
+            model.addAttribute("tiposEvento", TipoEvento.values());
+            return "proveedor/crear_evento";
+        }
+
         String emailUsuario = authentication.getName();
         Usuario creador = usuarioService.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Mapea los datos del DTO a la entidad Evento
-        Evento evento = new Evento();
-        evento.setNombre(eventoDto.getNombre());
-        evento.setDescripcion(eventoDto.getDescripcion());
-        evento.setUbicacion(eventoDto.getUbicacion());
-        evento.setFecha_evento(eventoDto.getFecha_evento());
-        evento.setHora_evento(eventoDto.getHora_evento());
-        evento.setTipo_evento(eventoDto.getTipo_evento());
+        // Usar el método del servicio que acepta DTO
+        // El evento se crea automáticamente con estado PENDIENTE
+        eventoService.guardarEventoDesdeDto(eventoDto, creador);
 
-        // Guarda la entidad con el usuario creador
-        eventoService.guardarEvento(evento, creador);
         return "redirect:/proveedor/eventos";
     }
 
+    @GetMapping("/eventos/ver/{id}")
+    public String verEvento(@PathVariable("id") Long id, Model model, Authentication authentication) {
+        String email = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        Optional<Evento> eventoOptional = eventoService.obtenerEventoPorId(id);
+
+        if (eventoOptional.isPresent()) {
+            Evento evento = eventoOptional.get();
+
+            // Verificar que el evento pertenece al proveedor logueado
+            if (!evento.getCreadoPor().getIdUsuario().equals(usuario.getIdUsuario())) {
+                return "redirect:/proveedor/eventos";
+            }
+
+            model.addAttribute("evento", evento);
+            return "proveedor/ver_evento";
+        }
+
+        return "redirect:/proveedor/eventos";
+    }
+
+    @GetMapping("/eventos/editar/{id}")
+    public String showEditarEventoForm(@PathVariable("id") Long id, Model model, Authentication authentication) {
+        String email = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Optional<Evento> eventoOptional = eventoService.obtenerEventoPorId(id);
+
+        if (eventoOptional.isPresent()) {
+            Evento evento = eventoOptional.get();
+
+            // Verificar que el evento pertenece al proveedor logueado
+            if (!evento.getCreadoPor().getIdUsuario().equals(usuario.getIdUsuario())) {
+                return "redirect:/proveedor/eventos";
+            }
+
+            // Solo permitir editar eventos PENDIENTES o RECHAZADOS
+            if (evento.getEstado() == EstadoEvento.APROBADO) {
+                // Redirigir con mensaje de error (puedes usar flash attributes)
+                return "redirect:/proveedor/eventos";
+            }
+
+            // Convertir Evento a EventoDto para el formulario
+            EventoDto eventoDto = new EventoDto();
+            eventoDto.setNombre(evento.getNombre());
+            eventoDto.setDescripcion(evento.getDescripcion());
+            eventoDto.setUbicacion(evento.getUbicacion());
+            eventoDto.setFechaEvento(evento.getFechaEvento());
+            eventoDto.setHoraEvento(evento.getHoraEvento());
+            eventoDto.setTipoEvento(evento.getTipoEvento());
+            eventoDto.setEstado(evento.getEstado());
+
+            model.addAttribute("evento", eventoDto);
+            model.addAttribute("eventoId", id);
+            model.addAttribute("tiposEvento", TipoEvento.values());
+            model.addAttribute("estadoActual", evento.getEstado());
+            return "proveedor/editar_evento";
+        }
+
+        return "redirect:/proveedor/eventos";
+    }
+
+    @PostMapping("/eventos/editar/{id}")
+    public String editarEvento(@PathVariable("id") Long id,
+                               @Valid @ModelAttribute("evento") EventoDto eventoDto,
+                               BindingResult result,
+                               Authentication authentication,
+                               Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("eventoId", id);
+            model.addAttribute("tiposEvento", TipoEvento.values());
+            return "proveedor/editar_evento";
+        }
+
+        String email = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Verificar permisos antes de actualizar
+        if (!eventoService.esCreadorDelEvento(id, usuario.getIdUsuario())) {
+            return "redirect:/proveedor/eventos";
+        }
+
+        // Verificar que el evento se puede editar (no está aprobado)
+        Optional<Evento> eventoActual = eventoService.obtenerEventoPorId(id);
+        if (eventoActual.isPresent() && eventoActual.get().getEstado() == EstadoEvento.APROBADO) {
+            return "redirect:/proveedor/eventos";
+        }
+
+        eventoService.actualizarEvento(id, eventoDto);
+        return "redirect:/proveedor/eventos";
+    }
+
+    @GetMapping("/eventos/eliminar/{id}")
+    public String eliminarEvento(@PathVariable("id") Long id, Authentication authentication) {
+        String email = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Verificar permisos antes de eliminar
+        if (eventoService.esCreadorDelEvento(id, usuario.getIdUsuario())) {
+            // Verificar que el evento se puede eliminar (no está aprobado)
+            Optional<Evento> eventoActual = eventoService.obtenerEventoPorId(id);
+            if (eventoActual.isPresent() && eventoActual.get().getEstado() != EstadoEvento.APROBADO) {
+                eventoService.eliminarEvento(id);
+            }
+        }
+
+        return "redirect:/proveedor/eventos";
+    }
+
+    @PostMapping("/eventos/cancelar/{id}")
+    public String cancelarEvento(@PathVariable("id") Long id, Authentication authentication) {
+        String email = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Verificar permisos
+        if (eventoService.esCreadorDelEvento(id, usuario.getIdUsuario())) {
+            eventoService.cancelarEvento(id);
+        }
+
+        return "redirect:/proveedor/eventos";
+    }
 }

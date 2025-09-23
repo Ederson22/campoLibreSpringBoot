@@ -18,7 +18,7 @@ public class MisEventos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_mis_eventos;
+    private Long idMisEventos;  // Cambio: id_mis_eventos -> idMisEventos
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario")
@@ -30,5 +30,5 @@ public class MisEventos {
 
     @Column(name = "fecha_guardado")
     @Temporal(TemporalType.DATE)
-    private Date fecha_guardado;
+    private Date fechaGuardado;  // Cambio: fecha_guardado -> fechaGuardado
 }

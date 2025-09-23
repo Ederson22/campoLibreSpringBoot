@@ -7,11 +7,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -47,17 +47,17 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Limpiar la base de datos antes de cargar nuevos datos
+        // Limpiar la base de datos antes de cargar nuevos datos (ORDEN CORRECTO)
         misEventosRepository.deleteAll();
         pqrsEventoRepository.deleteAll();
         pqrsTiendaRepository.deleteAll();
         pqrsRepository.deleteAll();
-        eventoRepository.deleteAll();
+        eventoRepository.deleteAll(); // Eventos antes que usuarios (FK creado_por)
         productoRepository.deleteAll();
         tiendaRepository.deleteAll();
         usuarioRolRepository.deleteAll();
         usuarioRepository.deleteAll();
-        rolRepository.deleteAll(); // ¡También limpia la tabla de roles!
+        rolRepository.deleteAll();
 
         // Si ya hay usuarios, no hace nada
         if (usuarioRepository.count() > 0) {
@@ -109,7 +109,6 @@ public class DataLoader implements CommandLineRunner {
         usuarioRepository.save(usuario3);
 
         // 3. Crear registros en la tabla de unión UsuarioRol
-        // Asignamos un rol a cada usuario
         UsuarioRol adminRolUsuario = new UsuarioRol();
         adminRolUsuario.setUsuario(usuario1);
         adminRolUsuario.setRol(administradorRol);
@@ -125,7 +124,7 @@ public class DataLoader implements CommandLineRunner {
         consumidorRolUsuario.setRol(consumidorRol);
         usuarioRolRepository.save(consumidorRolUsuario);
 
-        // 3. Crear una tienda de prueba
+        // 4. Crear una tienda de prueba
         Tienda tienda1 = new Tienda();
         tienda1.setNombre("La Tiendita de Ana");
         tienda1.setDescripcion("Productos artesanales de calidad.");
@@ -136,7 +135,7 @@ public class DataLoader implements CommandLineRunner {
         tienda1.setDueno(usuario2);
         tiendaRepository.save(tienda1);
 
-        // 4. Crear un producto de prueba
+        // 5. Crear un producto de prueba
         Producto producto1 = new Producto();
         producto1.setNombre("Mermelada de Fresa");
         producto1.setDescripcion("Hecha con fresas frescas.");
@@ -146,18 +145,59 @@ public class DataLoader implements CommandLineRunner {
         producto1.setTienda(tienda1);
         productoRepository.save(producto1);
 
-        // 5. Crear un evento de prueba
+        // 6. Crear fechas futuras para los eventos
+        Calendar calendar = Calendar.getInstance();
+
+        // Evento 1: En 7 días
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
+        Date fechaEvento1 = calendar.getTime();
+
+        // Evento 2: En 15 días
+        calendar.add(Calendar.DAY_OF_MONTH, 8);
+        Date fechaEvento2 = calendar.getTime();
+
+        // Evento 3: En 30 días
+        calendar.add(Calendar.DAY_OF_MONTH, 15);
+        Date fechaEvento3 = calendar.getTime();
+
+        // 7. Crear eventos de prueba con diferentes estados
+        // Evento 1: PENDIENTE (creado por proveedor)
         Evento evento1 = new Evento();
-        evento1.setNombre("Feria Artesanal");
-        evento1.setDescripcion("Gran feria con productos de artesanos locales.");
-        evento1.setUbicacion("Parque Central");
-        evento1.setFecha_evento(new Date());
-        evento1.setHora_evento("10:00 AM");
-        evento1.setTipo_evento(TipoEvento.TALLER);
-        evento1.setCreado_por(usuario1);
+        evento1.setNombre("Feria Artesanal del Campo");
+        evento1.setDescripcion("Gran feria con productos artesanales y tradicionales del campo colombiano.");
+        evento1.setUbicacion("Plaza Central de Zipaquirá");
+        evento1.setFechaEvento(fechaEvento1);
+        evento1.setHoraEvento("10:00");
+        evento1.setTipoEvento(TipoEvento.TALLER);
+        evento1.setEstado(EstadoEvento.PENDIENTE); // ¡IMPORTANTE: Agregar estado!
+        evento1.setCreadoPor(usuario2); // Creado por el proveedor
         eventoRepository.save(evento1);
 
-        // 6. Crear un PQRS de prueba
+        // Evento 2: APROBADO (creado por proveedor, aprobado por admin)
+        Evento evento2 = new Evento();
+        evento2.setNombre("Taller de Agricultura Sostenible");
+        evento2.setDescripcion("Aprende técnicas modernas de agricultura sostenible y orgánica.");
+        evento2.setUbicacion("Finca El Paraíso, Chía");
+        evento2.setFechaEvento(fechaEvento2);
+        evento2.setHoraEvento("14:30");
+        evento2.setTipoEvento(TipoEvento.CHARLA);
+        evento2.setEstado(EstadoEvento.APROBADO); // Ya está aprobado
+        evento2.setCreadoPor(usuario2); // Creado por el proveedor
+        eventoRepository.save(evento2);
+
+        // Evento 3: APROBADO (para que los consumidores puedan suscribirse)
+        Evento evento3 = new Evento();
+        evento3.setNombre("Reunión de Productores Locales");
+        evento3.setDescripcion("Encuentro mensual de productores para intercambiar experiencias.");
+        evento3.setUbicacion("Casa de la Cultura, Cajicá");
+        evento3.setFechaEvento(fechaEvento3);
+        evento3.setHoraEvento("09:00");
+        evento3.setTipoEvento(TipoEvento.REUNION);
+        evento3.setEstado(EstadoEvento.APROBADO);
+        evento3.setCreadoPor(usuario2);
+        eventoRepository.save(evento3);
+
+        // 8. Crear un PQRS de prueba
         PQRS pqrs1 = new PQRS();
         pqrs1.setTipo(TipoPQRS.QUEJA);
         pqrs1.setDescripcion("El producto llegó dañado.");
@@ -167,27 +207,40 @@ public class DataLoader implements CommandLineRunner {
         pqrs1.setReceptor(usuario2); // El proveedor la recibe
         pqrsRepository.save(pqrs1);
 
-        // 7. Crear datos en las tablas de unión
+        // 9. Crear datos en las tablas de unión
         // PqrsTienda: Conecta el PQRS con la tienda
         PqrsTienda pqrsTienda1 = new PqrsTienda();
         pqrsTienda1.setPqrs(pqrs1);
         pqrsTienda1.setTienda(tienda1);
         pqrsTiendaRepository.save(pqrsTienda1);
 
-        // 8. Crear un registro en la tabla de unión PqrsEvento
-        // Conecta la PQRS creada con el evento creado
+        // PqrsEvento: Conecta la PQRS con un evento
         PqrsEvento pqrsEvento1 = new PqrsEvento();
         pqrsEvento1.setPqrs(pqrs1);
-        pqrsEvento1.setEvento(evento1);
+        pqrsEvento1.setEvento(evento2); // Cambiar a evento2 que está aprobado
         pqrsEventoRepository.save(pqrsEvento1);
 
-        // MisEventos: Conecta el usuario que guarda el evento
+        // 10. Crear registros en MisEventos (suscripciones)
+        // Solo se puede suscribir a eventos APROBADOS
         MisEventos misEventos1 = new MisEventos();
-        misEventos1.setUsuario(usuario3);
-        misEventos1.setEvento(evento1);
-        misEventos1.setFecha_guardado(new Date());
+        misEventos1.setUsuario(usuario3); // El consumidor
+        misEventos1.setEvento(evento2);   // Evento aprobado
+        misEventos1.setFechaGuardado(new Date());
         misEventosRepository.save(misEventos1);
 
-        System.out.println("Datos de prueba completos y cargados con éxito.");
+        // Segundo registro de suscripción
+        MisEventos misEventos2 = new MisEventos();
+        misEventos2.setUsuario(usuario3); // El mismo consumidor
+        misEventos2.setEvento(evento3);   // Otro evento aprobado
+        misEventos2.setFechaGuardado(new Date());
+        misEventosRepository.save(misEventos2);
+
+        System.out.println("=== DATOS DE PRUEBA CARGADOS EXITOSAMENTE ===");
+        System.out.println("Usuarios creados: " + usuarioRepository.count());
+        System.out.println("Eventos creados: " + eventoRepository.count());
+        System.out.println("- Pendientes: " + eventoRepository.findByEstado(EstadoEvento.PENDIENTE).size());
+        System.out.println("- Aprobados: " + eventoRepository.findByEstado(EstadoEvento.APROBADO).size());
+        System.out.println("Suscripciones creadas: " + misEventosRepository.count());
+        System.out.println("===============================================");
     }
 }

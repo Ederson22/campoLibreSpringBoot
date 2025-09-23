@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Eventos - Campo Libre</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .navbar { background-color: #28a745; padding: 10px; margin-bottom: 20px; }
+        .navbar a { color: white; text-decoration: none; margin-right: 15px; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .card.futuro { border-left: 4px solid #28a745; }
+        .card.pasado { border-left: 4px solid #6c757d; background-color: #f8f9fa; }
+        .btn { background-color: #007bff; color: white; padding: 8px 15px; text-decoration: none; border-radius: 3px; border: none; cursor: pointer; }
+        .btn:hover { background-color: #0056b3; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-danger:hover { background-color: #c82333; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; }
+        .badge-success { background-color: #28a745; color: white; }
+        .badge-secondary { background-color: #6c757d; color: white; }
+        .section-title { margin-top: 30px; margin-bottom: 15px; padding-bottom: 5px; border-bottom: 2px solid #ddd; }
+        .empty-state { text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <a th:href="@{/consumidor}">Home</a>
+    <a th:href="@{/consumidor/eventos}">Ver Eventos</a>
+    <a th:href="@{/consumidor/mis-eventos}">Mis Eventos</a>
+    <a th:href="@{/consumidor/eventos/populares}">Eventos Populares</a>
+    <a th:href="@{/logout}">Salir</a>
+</nav>
+
+<h1>Mis Eventos Suscritos</h1>
+
+<!-- Mensajes de éxito/error -->
+<div th:if="${mensaje}" th:class="'alert alert-' + ${tipoMensaje}" th:text="${mensaje}"
+     style="padding: 10px; margin: 10px 0; border-radius: 3px; background-color: #d4edda; color: #155724;"></div>
+
+<!-- Eventos Futuros -->
+<h2 class="section-title">Próximos Eventos <span class="badge badge-success" th:text="${eventosFuturos != null ? eventosFuturos.size() : 0}">0</span></h2>
+
+<div th:if="${eventosFuturos != null and !eventosFuturos.empty}">
+    <div th:each="misEvento : ${eventosFuturos}" class="card futuro">
+        <h3 th:text="${misEvento.evento.nombre}">Nombre del Evento</h3>
+        <p><strong>Descripción:</strong> <span th:text="${misEvento.evento.descripcion}"></span></p>
+        <p><strong>Fecha del Evento:</strong> <span th:text="${#dates.format(misEvento.evento.fechaEvento, 'dd/MM/yyyy')}"></span></p>
+        <p><strong>Hora:</strong> <span th:text="${misEvento.evento.horaEvento}"></span></p>
+        <p><strong>Ubicación:</strong> <span th:text="${misEvento.evento.ubicacion}"></span></p>
+        <p><strong>Tipo:</strong> <span th:text="${misEvento.evento.tipoEvento}"></span></p>
+        <p><strong>Estado:</strong> <span th:text="${misEvento.evento.estado}" class="badge badge-success"></span></p>
+        <p><strong>Organizado por:</strong> <span th:text="${misEvento.evento.creadoPor.nombre}"></span></p>
+        <p><strong>Te suscribiste el:</strong> <span th:text="${#dates.format(misEvento.fechaGuardado, 'dd/MM/yyyy')}"></span></p>
+
+        <div>
+            <a th:href="@{/consumidor/eventos/detalle/{id}(id=${misEvento.evento.idEvento})}" class="btn">Ver Detalles</a>
+            <form th:action="@{/consumidor/mis-eventos/desuscribirse/{id}(id=${misEvento.evento.idEvento})}" method="post" style="display: inline; margin-left: 10px;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas desuscribirte de este evento?')">Desuscribirse</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:if="${eventosFuturos == null or eventosFuturos.empty}" class="empty-state">
+    <h3>No tienes eventos futuros suscritos</h3>
+    <p>¡Explora los eventos disponibles y suscríbete a los que te interesen!</p>
+    <a th:href="@{/consumidor/eventos}" class="btn">Ver Eventos Disponibles</a>
+</div>
+
+<!-- Eventos Pasados -->
+<h2 class="section-title">Eventos Pasados <span class="badge badge-secondary" th:text="${eventosPasados != null ? eventosPasados.size() : 0}">0</span></h2>
+
+<div th:if="${eventosPasados != null and !eventosPasados.empty}">
+    <div th:each="misEvento : ${eventosPasados}" class="card pasado">
+        <h3 th:text="${misEvento.evento.nombre}">Nombre del Evento</h3>
+        <p><strong>Descripción:</strong> <span th:text="${misEvento.evento.descripcion}"></span></p>
+        <p><strong>Fecha del Evento:</strong> <span th:text="${#dates.format(misEvento.evento.fechaEvento, 'dd/MM/yyyy')}"></span></p>
+        <p><strong>Hora:</strong> <span th:text="${misEvento.evento.horaEvento}"></span></p>
+        <p><strong>Ubicación:</strong> <span th:text="${misEvento.evento.ubicacion}"></span></p>
+        <p><strong>Tipo:</strong> <span th:text="${misEvento.evento.tipoEvento}"></span></p>
+        <p><strong>Estado:</strong> <span th:text="${misEvento.evento.estado}" class="badge badge-secondary"></span></p>
+        <p><strong>Organizado por:</strong> <span th:text="${misEvento.evento.creadoPor.nombre}"></span></p>
+        <p><strong>Te suscribiste el:</strong> <span th:text="${#dates.format(misEvento.fechaGuardado, 'dd/MM/yyyy')}"></span></p>
+
+        <div>
+            <a th:href="@{/consumidor/eventos/detalle/{id}(id=${misEvento.evento.idEvento})}" class="btn">Ver Detalles</a>
+            <span style="color: #6c757d; margin-left: 10px;">✓ Evento completado</span>
+        </div>
+    </div>
+</div>
+
+<div th:if="${eventosPasados == null or eventosPasados.empty}" class="empty-state">
+    <h3>No tienes historial de eventos</h3>
+    <p>Los eventos a los que te hayas suscrito y ya hayan pasado aparecerán aquí.</p>
+</div>
+
+<!-- Estadísticas rápidas -->
+<div style="margin-top: 40px; padding: 20px; background-color: #e9ecef; border-radius: 5px;">
+    <h3>Resumen</h3>
+    <p><strong>Total de eventos suscritos:</strong> <span th:text="${(eventosFuturos != null ? eventosFuturos.size() : 0) + (eventosPasados != null ? eventosPasados.size() : 0)}"></span></p>
+    <p><strong>Eventos futuros:</strong> <span th:text="${eventosFuturos != null ? eventosFuturos.size() : 0}"></span></p>
+    <p><strong>Eventos completados:</strong> <span th:text="${eventosPasados != null ? eventosPasados.size() : 0}"></span></p>
+</div>
+</body>
+</html>

@@ -1,19 +1,84 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Consumidor</title>
+    <title>Consumidor - Campo Libre</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .navbar { background-color: #28a745; padding: 10px; margin-bottom: 20px; }
+        .navbar a { color: white; text-decoration: none; margin-right: 15px; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .btn { background-color: #007bff; color: white; padding: 8px 15px; text-decoration: none; border-radius: 3px; }
+        .btn:hover { background-color: #0056b3; }
+        .btn-success { background-color: #28a745; }
+        .btn-success:hover { background-color: #1e7e34; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-danger:hover { background-color: #c82333; }
+        .alert { padding: 10px; margin: 10px 0; border-radius: 3px; }
+        .alert-success { background-color: #d4edda; color: #155724; }
+        .alert-error { background-color: #f8d7da; color: #721c24; }
+    </style>
 </head>
 <body>
-<h1>¡Hola, Consumidor!</h1>
-<p>Bienvenido a tu página de inicio. Aquí podrás ver productos y eventos.</p>
+<nav class="navbar">
+    <a th:href="@{/consumidor}">Home</a>
+    <a th:href="@{/consumidor/eventos}">Ver Eventos</a>
+    <a th:href="@{/consumidor/mis-eventos}">Mis Eventos</a>
+    <a th:href="@{/consumidor/eventos/populares}">Eventos Populares</a>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Cerrar Sesión</button>
+    </form>
+</nav>
 
-<div sec:authorize="isAuthenticated()">
-    <p>Has iniciado sesión como: <span sec:authentication="name"></span></p>
-    <p>Tu rol es: <span sec:authentication="authorities"></span></p>
+<h1>Bienvenido Consumidor - Campo Libre</h1>
+
+<!-- Mensajes de éxito/error -->
+<div th:if="${mensaje}" th:class="'alert alert-' + ${tipoMensaje}" th:text="${mensaje}"></div>
+
+<!-- Eventos Populares -->
+<h2>Eventos Populares</h2>
+<div th:if="${eventosPopulares != null and !eventosPopulares.empty}">
+    <div th:each="evento : ${eventosPopulares}" class="card">
+        <h3 th:text="${evento.nombre}">Nombre del Evento</h3>
+        <p><strong>Fecha:</strong> <span th:text="${#dates.format(evento.fechaEvento, 'dd/MM/yyyy')}"></span></p>
+        <p><strong>Ubicación:</strong> <span th:text="${evento.ubicacion}"></span></p>
+        <p><strong>Tipo:</strong> <span th:text="${evento.tipoEvento}"></span></p>
+        <p><strong>Estado:</strong> <span th:text="${evento.estado}"></span></p>
+        <a th:href="@{/consumidor/eventos/detalle/{id}(id=${evento.idEvento})}" class="btn">Ver Detalles</a>
+    </div>
+</div>
+<div th:if="${eventosPopulares == null or eventosPopulares.empty}">
+    <p>No hay eventos populares disponibles.</p>
 </div>
 
-<br/>
-<a href="/logout">Cerrar Sesión</a>
+<!-- Próximos Eventos -->
+<h2>Próximos Eventos</h2>
+<div th:if="${eventosFuturos != null and !eventosFuturos.empty}">
+    <div th:each="evento : ${eventosFuturos}" class="card">
+        <h3 th:text="${evento.nombre}">Nombre del Evento</h3>
+        <p><strong>Fecha:</strong> <span th:text="${#dates.format(evento.fechaEvento, 'dd/MM/yyyy')}"></span></p>
+        <p><strong>Hora:</strong> <span th:text="${evento.horaEvento}"></span></p>
+        <p><strong>Ubicación:</strong> <span th:text="${evento.ubicacion}"></span></p>
+        <p><strong>Tipo:</strong> <span th:text="${evento.tipoEvento}"></span></p>
+
+        <!-- Botones de suscripción -->
+        <div th:if="${suscripciones != null}">
+            <div th:if="${suscripciones.get(evento.idEvento)}">
+                <span style="color: green;">✓ Ya estás suscrito</span>
+                <form th:action="@{/consumidor/eventos/desuscribirse/{id}(id=${evento.idEvento})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Desuscribirse</button>
+                </form>
+            </div>
+            <div th:unless="${suscripciones.get(evento.idEvento)}">
+                <form th:action="@{/consumidor/eventos/suscribirse/{id}(id=${evento.idEvento})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-success">Suscribirse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:if="${eventosFuturos == null or eventosFuturos.empty}">
+    <p>No hay eventos futuros disponibles.</p>
+</div>
 </body>
 </html>

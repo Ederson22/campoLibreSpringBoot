@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Eventos Disponibles - Campo Libre</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .navbar { background-color: #28a745; padding: 10px; margin-bottom: 20px; }
+        .navbar a { color: white; text-decoration: none; margin-right: 15px; }
+        .filters { background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .filters input, .filters select { margin: 5px; padding: 5px; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .btn { background-color: #007bff; color: white; padding: 8px 15px; text-decoration: none; border-radius: 3px; border: none; cursor: pointer; }
+        .btn:hover { background-color: #0056b3; }
+        .btn-success { background-color: #28a745; }
+        .btn-success:hover { background-color: #1e7e34; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-danger:hover { background-color: #c82333; }
+        .suscrito { color: green; font-weight: bold; }
+        .no-suscrito { color: #666; }
+        .contador { background-color: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <a th:href="@{/consumidor}">Home</a>
+    <a th:href="@{/consumidor/eventos}">Ver Eventos</a>
+    <a th:href="@{/consumidor/mis-eventos}">Mis Eventos</a>
+    <a th:href="@{/consumidor/eventos/populares}">Eventos Populares</a>
+    <a th:href="@{/logout}">Salir</a>
+</nav>
+
+<h1>Eventos Disponibles</h1>
+
+<!-- Mensajes de éxito/error -->
+<div th:if="${mensaje}" th:class="'alert alert-' + ${tipoMensaje}" th:text="${mensaje}" style="padding: 10px; margin: 10px 0; border-radius: 3px; background-color: #d4edda; color: #155724;"></div>
+
+<!-- Filtros -->
+<div class="filters">
+    <form th:action="@{/consumidor/eventos}" method="get">
+        <label>Nombre: </label>
+        <input type="text" name="nombre" th:value="${param.nombre}"/>
+
+        <label>Tipo: </label>
+        <select name="tipo">
+            <option value="">Todos</option>
+            <option th:each="tipo : ${tiposEvento}"
+                    th:value="${tipo}"
+                    th:text="${tipo}"
+                    th:selected="${param.tipo == tipo.toString()}"></option>
+        </select>
+
+        <label>Ubicación: </label>
+        <input type="text" name="ubicacion" th:value="${param.ubicacion}"/>
+
+        <button type="submit" class="btn">Buscar</button>
+        <a th:href="@{/consumidor/eventos}" class="btn">Limpiar</a>
+    </form>
+</div>
+
+<!-- Lista de Eventos -->
+<div th:if="${eventos != null and !eventos.empty}">
+    <p><strong>Total de eventos: <span th:text="${eventos.size()}"></span></strong></p>
+
+    <div th:each="evento : ${eventos}" class="card">
+        <h3 th:text="${evento.nombre}">Nombre del Evento</h3>
+        <p><strong>Descripción:</strong> <span th:text="${evento.descripcion}"></span></p>
+        <p><strong>Fecha:</strong> <span th:text="${#dates.format(evento.fechaEvento, 'dd/MM/yyyy')}"></span></p>
+        <p><strong>Hora:</strong> <span th:text="${evento.horaEvento}"></span></p>
+        <p><strong>Ubicación:</strong> <span th:text="${evento.ubicacion}"></span></p>
+        <p><strong>Tipo:</strong> <span th:text="${evento.tipoEvento}"></span></p>
+        <p><strong>Estado:</strong> <span th:text="${evento.estado}"></span></p>
+
+        <!-- Contador de suscriptores -->
+        <p th:if="${conteoSuscriptores != null}">
+            <strong>Suscriptores:</strong>
+            <span class="contador" th:text="${conteoSuscriptores.get(evento.idEvento)}">0</span>
+        </p>
+
+        <!-- Estado de suscripción y botones -->
+        <div th:if="${suscripciones != null}">
+            <div th:if="${suscripciones.get(evento.idEvento)}" class="suscrito">
+                ✓ Ya estás suscrito a este evento
+                <form th:action="@{/consumidor/eventos/desuscribirse/{id}(id=${evento.idEvento})}" method="post" style="display: inline; margin-left: 10px;">
+                    <button type="submit" class="btn btn-danger">Desuscribirse</button>
+                </form>
+            </div>
+            <div th:unless="${suscripciones.get(evento.idEvento)}" class="no-suscrito">
+                <form th:action="@{/consumidor/eventos/suscribirse/{id}(id=${evento.idEvento})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-success">Suscribirse</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Si no hay información de suscripción (usuario no logueado) -->
+        <div th:if="${suscripciones == null}">
+            <a th:href="@{/login}" class="btn">Iniciar sesión para suscribirse</a>
+        </div>
+
+        <br><br>
+        <a th:href="@{/consumidor/eventos/detalle/{id}(id=${evento.idEvento})}" class="btn">Ver Detalles</a>
+    </div>
+</div>
+
+<!-- Mensaje cuando no hay eventos -->
+<div th:if="${eventos == null or eventos.empty}">
+    <div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 5px;">
+        <h3>No hay eventos disponibles</h3>
+        <p>No se encontraron eventos que coincidan con los filtros seleccionados.</p>
+        <a th:href="@{/consumidor/eventos}" class="btn">Ver todos los eventos</a>
+    </div>
+</div>
+</body>
+</html>

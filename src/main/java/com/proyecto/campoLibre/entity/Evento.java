@@ -15,7 +15,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class Evento {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idEvento;
@@ -31,16 +30,20 @@ public class Evento {
 
     @Column(name = "fecha_evento")
     @Temporal(TemporalType.DATE)
-    private Date fecha_evento;
+    private Date fechaEvento;  // Cambio: fecha_evento -> fechaEvento
 
     @Column(name = "hora_evento")
-    private String hora_evento; // Puedes usar java.time.LocalTime si prefieres
+    private String horaEvento;  // Cambio: hora_evento -> horaEvento
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_evento")
-    private TipoEvento tipo_evento;
+    private TipoEvento tipoEvento;  // Cambio: tipo_evento -> tipoEvento
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private EstadoEvento estado = EstadoEvento.PENDIENTE;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creado_por")
-    private Usuario creado_por;
+    private Usuario creadoPor;  // Cambio: creado_por -> creadoPor
 }
