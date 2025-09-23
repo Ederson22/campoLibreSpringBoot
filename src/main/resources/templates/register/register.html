@@ -3,58 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro de Usuario</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Fondo blanco suave */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .register-container {
+            position: relative;
+            width: 450px; /* Ancho ajustado para más campos */
+            background: #fff; /* Fondo blanco para el contenedor */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        /* Efectos de fondo flotantes */
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #a8e063, #56ab2f); /* Verde degradado */
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .register-container::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #56ab2f, #a8e063); /* Verde degradado */
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 10px;
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            color: #333;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box; /* Asegura que el padding no desborde */
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #56ab2f; /* Borde verde al enfocar */
+        }
+
+        .input-group span {
+            display: block;
+            color: #e53935; /* Rojo para mensajes de error */
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px 0;
+            background: linear-gradient(to right, #a8e063, #56ab2f); /* Botón con degradado verde */
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+            z-index: 1;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(to right, #56ab2f, #a8e063);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            z-index: 1;
+        }
+
+        .login-link a {
+            color: #56ab2f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
-<h2>Registro de Usuario</h2>
 
-<form th:action="@{/register}" th:object="${usuario}" method="post">
-    <div>
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" th:field="*{nombre}" required>
-        <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
-    </div>
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}" required>
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-    </div>
-    <div>
-        <label for="contrasena">Contraseña:</label>
-        <input type="password" id="contrasena" th:field="*{contrasena}" required>
-        <span th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></span>
-    </div>
-    <div>
-        <label for="telefono">Teléfono:</label>
-        <input type="text" id="telefono" th:field="*{telefono}" required>
-        <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
-    </div>
-    <div>
-        <label for="tipoDocumento">Tipo de Documento:</label>
-        <select id="tipoDocumento" th:field="*{tipoDocumento}" required>
-            <option value="">Selecciona un tipo</option>
-            <option value="C.C.">C.C. (Cédula de Ciudadanía)</option>
-            <option value="T.I.">T.I. (Tarjeta de Identidad)</option>
-            <option value="Pasaporte">Pasaporte</option>
-            <option value="C.E.">C.E. (Cédula de Extranjería)</option>
-        </select>
-        <span th:if="${#fields.hasErrors('tipoDocumento')}" th:errors="*{tipoDocumento}"></span>
-    </div>
-    <div>
-        <label for="documento">Documento:</label>
-        <input type="text" id="documento" th:field="*{documento}" required>
-        <span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"></span>
-    </div>
-    <div>
-        <label for="idRol">Rol:</label>
-        <select id="idRol" th:field="*{idRol}" required>
-            <option value="">Selecciona un rol</option>
-            <option th:each="rol : ${roles}" th:value="${rol.idRol}" th:text="${rol.nombre}"></option>
-        </select>
-        <span th:if="${#fields.hasErrors('idRol')}" th:errors="*{idRol}"></span>
-    </div>
-    <div>
-        <button type="submit">Registrar</button>
-    </div>
-</form>
+<div class="register-container">
+    <h2>Registro de Usuario</h2>
+
+    <form th:action="@{/register}" th:object="${usuario}" method="post">
+        <div class="input-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}" required>
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+        </div>
+        <div class="input-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required>
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+        <div class="input-group">
+            <label for="contrasena">Contraseña:</label>
+            <input type="password" id="contrasena" th:field="*{contrasena}" required>
+            <span th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></span>
+        </div>
+        <div class="input-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" th:field="*{telefono}" required>
+            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+        </div>
+        <div class="input-group">
+            <label for="tipoDocumento">Tipo de Documento:</label>
+            <select id="tipoDocumento" th:field="*{tipoDocumento}" required>
+                <option value="">Selecciona un tipo</option>
+                <option value="C.C.">C.C. (Cédula de Ciudadanía)</option>
+                <option value="T.I.">T.I. (Tarjeta de Identidad)</option>
+                <option value="Pasaporte">Pasaporte</option>
+                <option value="C.E.">C.E. (Cédula de Extranjería)</option>
+            </select>
+            <span th:if="${#fields.hasErrors('tipoDocumento')}" th:errors="*{tipoDocumento}"></span>
+        </div>
+        <div class="input-group">
+            <label for="documento">Documento:</label>
+            <input type="text" id="documento" th:field="*{documento}" required>
+            <span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"></span>
+        </div>
+        <div class="input-group">
+            <label for="idRol">Rol:</label>
+            <select id="idRol" th:field="*{idRol}" required>
+                <option value="">Selecciona un rol</option>
+                <option th:each="rol : ${roles}" th:value="${rol.idRol}" th:text="${rol.nombre}"></option>
+            </select>
+            <span th:if="${#fields.hasErrors('idRol')}" th:errors="*{idRol}"></span>
+        </div>
+        <div>
+            <button type="submit">Registrar</button>
+        </div>
+    </form>
+</div>
+
 </body>
 </html>

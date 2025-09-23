@@ -1,44 +1,148 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Crear Tienda</title>
+    <meta charset="UTF-8">
+    <title>Crear Tienda</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+          --color-verde-oscuro: #56ab2f;
+          --color-verde-claro: #a8e063;
+          --color-fondo: #f0f2f5;
+          --color-texto-oscuro: #333;
+          --color-texto-gris: #777;
+          --color-error: #e53935;
+        }
+
+        body {
+          font-family: 'Poppins', sans-serif;
+          background-color: var(--color-fondo);
+          margin: 0;
+          padding: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+        }
+
+        .create-container {
+          background-color: #fff;
+          padding: 40px;
+          border-radius: 20px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          max-width: 600px;
+          width: 100%;
+        }
+
+        .create-container h2 {
+          font-size: 2em;
+          color: var(--color-texto-oscuro);
+          margin-bottom: 25px;
+          text-align: center;
+          font-weight: 600;
+        }
+
+        .form-group {
+          margin-bottom: 20px;
+        }
+
+        .form-group label {
+          display: block;
+          font-weight: 500;
+          color: var(--color-texto-oscuro);
+          margin-bottom: 8px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 1em;
+          color: var(--color-texto-oscuro);
+          background-color: #f8f8f8;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+          border-color: var(--color-verde-oscuro);
+          outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group span {
+          display: block;
+          color: var(--color-error);
+          font-size: 0.85em;
+          margin-top: 5px;
+        }
+
+        .create-button {
+          width: 100%;
+          padding: 15px;
+          margin-top: 20px;
+          background: linear-gradient(to right, var(--color-verde-claro), var(--color-verde-oscuro));
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          font-size: 1.1em;
+          font-weight: 600;
+          cursor: pointer;
+          box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+          transition: background 0.3s ease;
+        }
+
+        .create-button:hover {
+          background: linear-gradient(to right, var(--color-verde-oscuro), var(--color-verde-claro));
+        }
+    </style>
 </head>
 <body>
-<h2>Crear Mi Tienda</h2>
+<div class="create-container">
+    <h2>Crear Mi Tienda</h2>
 
-<form th:action="@{/proveedor/tienda/crear}" th:object="${tienda}" method="post">
-  <div>
-    <label>Nombre de la tienda</label>
-    <input type="text" th:field="*{nombre}" />
-  </div>
+    <form th:action="@{/proveedor/tienda/crear}" th:object="${tienda}" method="post">
+        <div class="form-group">
+            <label for="nombre">Nombre de la tienda</label>
+            <input type="text" id="nombre" th:field="*{nombre}" />
+        </div>
 
-  <div>
-    <label>Descripción</label>
-    <textarea th:field="*{descripcion}"></textarea>
-  </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" th:field="*{descripcion}"></textarea>
+        </div>
 
-  <div>
-    <label>Correo de la Tienda</label>
-    <input type="email" th:field="*{correoTienda}" />
-  </div>
+        <div class="form-group">
+            <label for="correoTienda">Correo de la Tienda</label>
+            <input type="email" id="correoTienda" th:field="*{correoTienda}" />
+        </div>
 
-  <div>
-    <label>Teléfono de la Tienda</label>
-    <input type="text" th:field="*{telefonoTienda}" />
-  </div>
+        <div class="form-group">
+            <label for="telefonoTienda">Teléfono de la Tienda</label>
+            <input type="text" id="telefonoTienda" th:field="*{telefonoTienda}" />
+        </div>
 
-  <div>
-    <label>Ubicación</label>
-    <input type="text" th:field="*{ubicacion}" />
-  </div>
+        <div class="form-group">
+            <label for="ubicacion">Ubicación</label>
+            <input type="text" id="ubicacion" th:field="*{ubicacion}" />
+        </div>
 
-  <div>
-    <label>URL de la Imagen</label>
-    <input type="text" th:field="*{imagenTienda}" />
-  </div>
+        <div class="form-group">
+            <label for="imagenTienda">URL de la Imagen</label>
+            <input type="text" id="imagenTienda" th:field="*{imagenTienda}" />
+        </div>
 
-  <button type="submit">Crear Tienda</button>
-</form>
+        <button type="submit" class="create-button">Crear Tienda</button>
+    </form>
+</div>
 </body>
 </html>

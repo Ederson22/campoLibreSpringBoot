@@ -3,49 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <title>Enviar PQRS</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-verde-oscuro: #56ab2f;
+            --color-verde-claro: #a8e063;
+            --color-fondo: #f0f2f5;
+            --color-texto-oscuro: #333;
+            --color-texto-gris: #777;
+            --color-borde-gris: #ddd;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-fondo);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .form-container h2 {
+            font-size: 2em;
+            color: var(--color-texto-oscuro);
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--color-texto-oscuro);
+            margin-bottom: 8px;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--color-borde-gris);
+            border-radius: 8px;
+            font-size: 1em;
+            color: var(--color-texto-oscuro);
+            background-color: #f8f8f8;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--color-verde-oscuro);
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .submit-button,
+        .back-button {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button {
+            background: linear-gradient(to right, var(--color-verde-claro), var(--color-verde-oscuro));
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+        }
+
+        .submit-button:hover {
+            background: linear-gradient(to right, var(--color-verde-oscuro), var(--color-verde-claro));
+            transform: translateY(-2px);
+        }
+
+        .back-button {
+            background-color: #fff;
+            color: var(--color-texto-oscuro);
+            border: 2px solid #ccc;
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
 </head>
 <body>
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <h2>Enviar PQRS al Administrador</h2>
-            <form th:action="@{/proveedor/pqrs/guardar}" th:object="${pqrsDto}" method="post">
-
-                <div class="form-group">
-                    <label for="tipo">Tipo de PQRS:</label>
-                    <select id="tipo" th:field="*{tipo}" class="form-control">
-                        <option value="">-- Seleccione un tipo --</option>
-                        <option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="${tipo}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="idTienda">Tienda (opcional):</label>
-                    <select id="idTienda" th:field="*{idTienda}" class="form-control">
-                        <option value="">-- Seleccione una tienda --</option>
-                        <option th:each="tienda : ${tiendas}" th:value="${tienda.idTienda}" th:text="${tienda.nombre}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="idEvento">Evento (opcional):</label>
-                    <select id="idEvento" th:field="*{idEvento}" class="form-control">
-                        <option value="">-- Seleccione un evento --</option>
-                        <option th:each="evento : ${eventos}" th:value="${evento.idEvento}" th:text="${evento.nombre}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="descripcion">Descripción:</label>
-                    <textarea id="descripcion" th:field="*{descripcion}" class="form-control" rows="5"></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Enviar PQRS</button>
-                <a th:href="@{/proveedor/dashboard}" class="btn btn-secondary ml-2">Volver al Dashboard</a>
-            </form>
+<div class="form-container">
+    <h2>Enviar PQRS al Administrador</h2>
+    <form th:action="@{/proveedor/pqrs/guardar}" th:object="${pqrsDto}" method="post">
+        <div class="form-group">
+            <label for="tipo">Tipo de PQRS:</label>
+            <select id="tipo" th:field="*{tipo}">
+                <option value="">-- Seleccione un tipo --</option>
+                <option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="${tipo}"></option>
+            </select>
         </div>
-    </div>
+        <div class="form-group">
+            <label for="idTienda">Tienda (opcional):</label>
+            <select id="idTienda" th:field="*{idTienda}">
+                <option value="">-- Seleccione una tienda --</option>
+                <option th:each="tienda : ${tiendas}" th:value="${tienda.idTienda}" th:text="${tienda.nombre}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="idEvento">Evento (opcional):</label>
+            <select id="idEvento" th:field="*{idEvento}">
+                <option value="">-- Seleccione un evento --</option>
+                <option th:each="evento : ${eventos}" th:value="${evento.idEvento}" th:text="${evento.nombre}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" th:field="*{descripcion}" rows="5"></textarea>
+        </div>
+        <div class="button-group">
+            <a th:href="@{/proveedor/dashboard}" class="back-button">Volver al Dashboard</a>
+            <button type="submit" class="submit-button">Enviar PQRS</button>
+        </div>
+    </form>
 </div>
 </body>
 </html>

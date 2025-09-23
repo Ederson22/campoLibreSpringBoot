@@ -2,46 +2,213 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Panel del Proveedor</title>
+    <title>Dashboard del Proveedor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-verde-oscuro: #56ab2f;
+            --color-verde-claro: #a8e063;
+            --color-fondo: #f0f2f5;
+            --color-tarjeta: #d9ead3;
+            --color-texto-oscuro: #333;
+            --color-texto-gris: #777;
+            --color-rojo: #e53935;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://plus.unsplash.com/premium_photo-1686529896385-8a8d581d0225?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Sombra de texto para mayor legibilidad */
+        }
+
+        /* Estilos de la barra lateral (Sidebar) */
+        .sidebar {
+            width: 280px;
+            background-color: #fff;
+            padding: 30px 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            z-index: 1000;
+        }
+
+        .toggle-btn-container {
+            width: 100%;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 2em;
+            color: var(--color-verde-oscuro);
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar.collapsed .logo-section .logo-text,
+        .sidebar.collapsed .menu-item-text {
+            display: none;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .logo-section .logo-icon {
+            font-size: 2.5em;
+            color: var(--color-verde-oscuro);
+        }
+
+        .logo-section .logo-text {
+            font-weight: 700;
+            font-size: 1.8em;
+            margin-left: 10px;
+            color: var(--color-texto-oscuro);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: transparent;
+            color: var(--color-texto-oscuro);
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a .icon {
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: var(--color-fondo);
+            color: var(--color-verde-oscuro);
+        }
+
+        .sidebar .active-link a {
+            background-color: var(--color-tarjeta);
+            color: var(--color-verde-oscuro);
+        }
+
+        .sidebar .logout-button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--color-rojo);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            margin-left: 280px;
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            transition: margin-left 0.3s ease;
+        }
+
+        body.collapsed .main-content {
+            margin-left: 80px;
+        }
+
+        .content-section {
+            background-color: transparent;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .content-section h1 {
+            font-size: 2.5em;
+            color: #fff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .content-section .user-email {
+            color: var(--color-verde-claro);
+            font-weight: 600;
+        }
+
+        .content-section p {
+            font-size: 1.1em;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-<h1>Bienvenido, <span th:text="${#authentication.name}"></span>!</h1>
-<p>Este es tu panel de control como proveedor. Aquí podrás gestionar tu tienda y productos.</p>
+<aside class="sidebar" id="sidebar">
+    <div class="toggle-btn-container">
+        <button class="toggle-btn" onclick="toggleSidebar()">&#9776;</button>
+    </div>
+    <div class="logo-section">
+        <span class="logo-icon">&#x1f331;</span>
+        <span class="logo-text">Campo Libre</span>
+    </div>
+    <ul>
+        <li class="active-link"><a href="#"><span class="icon">&#x1f3e0;</span><span class="menu-item-text">Dashboard</span></a></li>
+        <li><a th:href="@{/proveedor/tienda/ver}"><span class="icon">&#x1f3ea;</span><span class="menu-item-text">Mi Tienda</span></a></li>
+        <li><a th:href="@{/proveedor/productos}"><span class="icon">&#x1f34e;</span><span class="menu-item-text">Gestionar Productos</span></a></li>
+        <li><a th:href="@{/proveedor/eventos}"><span class="icon">&#x1f4c5;</span><span class="menu-item-text">Gestionar Eventos</span></a></li>
+        <li><a th:href="@{/proveedor/pqrs}"><span class="icon">&#x1f4e9;</span><span class="menu-item-text">PQRS</span></a></li>
+    </ul>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="logout-button"><span class="menu-item-text">Cerrar Sesión</span></button>
+    </form>
+</aside>
 
-<h2>Gestión de Tienda</h2>
-<ul>
-    <li th:if="${!tieneTienda}">
-        <a th:href="@{/proveedor/tienda/crear}">Crear mi tienda</a>
-    </li>
-    <li th:if="${tieneTienda}">
-        <a th:href="@{/proveedor/tienda/ver}">Ver mi tienda</a>
-    </li>
-</ul>
+<main class="main-content" id="main-content">
+    <div class="content-section">
+        <h1>¡Bienvenido, <span th:text="${#authentication.name}" class="user-email"></span>!</h1>
+        <p>Este es tu panel de control como proveedor. Aquí podrás gestionar tu tienda y productos.</p>
+    </div>
+</main>
 
-<h2>Gestión de Productos</h2>
-<ul>
-    <li>
-        <a th:href="@{/proveedor/productos}">Gestionar Productos</a>
-    </li>
-</ul>
-
-<h2>Gestión de Eventos</h2>
-<ul>
-    <li>
-        <a th:href="@{/proveedor/eventos}">Gestionar Eventos</a>
-    </li>
-</ul>
-
-<h2>Comunicación con el Administrador</h2>
-<ul>
-    <li>
-        <a th:href="@{/proveedor/pqrs}">PQRS</a>
-    </li>
-</ul>
-
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Cerrar Sesión</button>
-</form>
-
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+        document.body.classList.toggle('collapsed');
+    }
+</script>
 </body>
 </html>

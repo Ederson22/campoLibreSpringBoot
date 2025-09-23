@@ -3,34 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <title>Mi Tienda</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-verde-oscuro: #56ab2f;
+            --color-verde-claro: #a8e063;
+            --color-fondo: #f0f2f5;
+            --color-tarjeta: #d9ead3;
+            --color-texto-claro: #f8f8f8;
+            --color-texto-oscuro: #333;
+            --color-texto-gris: #777;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-fondo);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .shop-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .shop-container h1 {
+            font-size: 2em;
+            color: var(--color-verde-oscuro);
+            margin-bottom: 20px;
+        }
+
+        .shop-container h2 {
+            font-size: 1.5em;
+            color: var(--color-texto-oscuro);
+            margin-top: 30px;
+            border-bottom: 2px solid var(--color-fondo);
+            padding-bottom: 10px;
+        }
+
+        .shop-info-card {
+            background-color: var(--color-tarjeta);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .shop-info-card p {
+            margin: 10px 0;
+            color: var(--color-texto-oscuro);
+            font-size: 1em;
+        }
+
+        .shop-info-card strong {
+            color: var(--color-verde-oscuro);
+            font-weight: 600;
+        }
+
+        .shop-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .shop-buttons a, .back-link {
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .edit-button {
+            background-color: var(--color-verde-oscuro);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+        }
+
+        .edit-button:hover {
+            background-color: #4b8b26;
+        }
+
+        .delete-button {
+            background-color: #fff;
+            color: #e53935;
+            border: 2px solid #e53935;
+        }
+
+        .delete-button:hover {
+            background-color: #e53935;
+            color: #fff;
+        }
+
+        .back-link-container {
+            margin-top: 20px;
+        }
+
+        .back-link {
+            background-color: transparent;
+            color: var(--color-texto-oscuro);
+            border: 2px solid #ccc;
+        }
+
+        .back-link:hover {
+            background-color: #e0e0e0;
+        }
+
+        .no-shop-message {
+            color: var(--color-texto-oscuro);
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-<h1>Información de la Tienda</h1>
+<div class="shop-container">
+    <h1>Mi Tienda</h1>
 
-<div th:if="${tienda != null}">
-    <h2>Detalles de la Tienda</h2>
-    <p><strong>Nombre:</strong> <span th:text="${tienda.nombre}"></span></p>
-    <p><strong>Descripción:</strong> <span th:text="${tienda.descripcion}"></span></p>
-    <p><strong>Correo Electrónico:</strong> <span th:text="${tienda.correoTienda}"></span></p>
-    <p><strong>Teléfono:</strong> <span th:text="${tienda.telefonoTienda}"></span></p>
-    <p><strong>Ubicación:</strong> <span th:text="${tienda.ubicacion}"></span></p>
-    <p><strong>Estado:</strong> <span th:text="${tienda.estado}"></span></p>
+    <div th:if="${tienda != null}">
+        <div class="shop-info-card">
+            <h2>Detalles de la Tienda</h2>
+            <p><strong>Nombre:</strong> <span th:text="${tienda.nombre}"></span></p>
+            <p><strong>Descripción:</strong> <span th:text="${tienda.descripcion}"></span></p>
+            <p><strong>Correo Electrónico:</strong> <span th:text="${tienda.correoTienda}"></span></p>
+            <p><strong>Teléfono:</strong> <span th:text="${tienda.telefonoTienda}"></span></p>
+            <p><strong>Ubicación:</strong> <span th:text="${tienda.ubicacion}"></span></p>
+            <p><strong>Estado:</strong> <span th:text="${tienda.estado}"></span></p>
+        </div>
 
-    <div th:if="${tienda.imagenTienda != null}">
-        <img th:src="@{${tienda.imagenTienda}}" alt="Imagen de la tienda" style="max-width: 300px;">
+        <div th:if="${tienda.imagenTienda != null}">
+            <img th:src="@{${tienda.imagenTienda}}" alt="Imagen de la tienda" class="shop-image">
+        </div>
+
+        <div class="shop-buttons">
+            <a th:href="@{/proveedor/tienda/editar}" class="edit-button">Editar Tienda</a>
+            <a th:href="@{/proveedor/tienda/eliminar}" class="delete-button"
+               onclick="return confirm('¿Estás seguro de que quieres eliminar tu tienda? Esta acción es irreversible.');">Eliminar Tienda</a>
+        </div>
     </div>
 
-    <br/>
-    <a th:href="@{/proveedor/tienda/editar}">Editar Tienda</a>
-    <a th:href="@{/proveedor/tienda/eliminar}"
-       onclick="return confirm('¿Estás seguro de que quieres eliminar tu tienda? Esta acción es irreversible.');">Eliminar Tienda</a>
-</div>
+    <div th:if="${tienda == null}">
+        <p class="no-shop-message">No se encontró la información de la tienda.</p>
+    </div>
 
-<div th:if="${tienda == null}">
-    <p>No se encontró la información de la tienda.</p>
+    <div class="back-link-container">
+        <a th:href="@{/proveedor/dashboard}" class="back-link">Volver al Dashboard</a>
+    </div>
 </div>
-
-<br/>
-<a th:href="@{/proveedor/dashboard}">Volver al Dashboard</a>
 </body>
 </html>

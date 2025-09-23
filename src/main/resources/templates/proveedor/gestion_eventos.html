@@ -1,51 +1,200 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Gestión de Eventos</title>
+    <meta charset="UTF-8">
+    <title>Gestión de Eventos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-verde-oscuro: #56ab2f;
+            --color-verde-claro: #a8e063;
+            --color-fondo: #f0f2f5;
+            --color-texto-oscuro: #333;
+            --color-texto-gris: #777;
+            --color-borde-gris: #e0e0e0;
+            --color-rojo: #e53935;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-fondo);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--color-texto-oscuro);
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .create-link {
+            display: inline-block;
+            padding: 12px 20px;
+            background: linear-gradient(to right, var(--color-verde-claro), var(--color-verde-oscuro));
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+            transition: background 0.3s ease;
+        }
+
+        .create-link:hover {
+            background: linear-gradient(to right, var(--color-verde-oscuro), var(--color-verde-claro));
+        }
+
+        .event-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .event-table thead th {
+            background-color: var(--color-fondo);
+            color: var(--color-texto-gris);
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 15px;
+            border-bottom: 2px solid var(--color-borde-gris);
+        }
+
+        .event-table tbody tr {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .event-table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-table td {
+            padding: 15px;
+            border: none;
+            color: var(--color-texto-oscuro);
+        }
+
+        .event-table td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+        .event-table td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+
+        .action-links a {
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .edit-link {
+            color: #ff9800; /* Naranja */
+            background-color: #fff3e0;
+        }
+        .edit-link:hover {
+            background-color: #ff9800;
+            color: #fff;
+        }
+
+        .cancel-link {
+            color: #03a9f4; /* Azul */
+            background-color: #e1f5fe;
+        }
+        .cancel-link:hover {
+            background-color: #03a9f4;
+            color: #fff;
+        }
+
+        .delete-link {
+            color: var(--color-rojo);
+            background-color: #ffebee;
+        }
+        .delete-link:hover {
+            background-color: var(--color-rojo);
+            color: #fff;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 20px;
+            background-color: transparent;
+            color: var(--color-texto-oscuro);
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: var(--color-borde-gris);
+            color: var(--color-texto-oscuro);
+        }
+    </style>
 </head>
 <body>
-<h1>Gestión de Eventos</h1>
+<div class="main-container">
+    <h1>Gestión de Eventos</h1>
 
-<a th:href="@{/proveedor/eventos/crear}">Crear nuevo evento</a>
+    <div class="action-bar">
+        <a th:href="@{/proveedor/eventos/crear}" class="create-link">Crear nuevo evento</a>
+        <a th:href="@{/proveedor/dashboard}" class="back-link">Volver al Dashboard</a>
+    </div>
 
-<br><br>
-
-<table border="1">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Nombre</th>
-    <th>Descripción</th>
-    <th>Ubicación</th>
-    <th>Fecha</th>
-    <th>Hora</th>
-    <th>Tipo</th>
-    <th>Estado</th>
-    <th>Acciones</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="evento : ${eventosList}">
-    <td th:text="${evento.idEvento}">ID</td>
-    <td th:text="${evento.nombre}">Nombre</td>
-    <td th:text="${evento.descripcion}">Descripción</td>
-    <td th:text="${evento.ubicacion}">Ubicación</td>
-    <td th:text="${#temporals.format(evento.fechaEvento, 'dd/MM/yyyy')}">Fecha</td>
-    <td th:text="${#temporals.format(evento.horaEvento, 'HH:mm')}">Hora</td>
-    <td th:text="${evento.tipoEvento}">Tipo</td>
-    <td th:text="${evento.estado}">Estado</td>
-    <td>
-      <a th:href="@{/proveedor/eventos/editar/{id}(id=${evento.idEvento})}">Editar</a> |
-      <a th:href="@{/proveedor/eventos/cancelar/{id}(id=${evento.idEvento})}">Cancelar</a> |
-      <a th:href="@{/proveedor/eventos/eliminar/{id}(id=${evento.idEvento})}"
-         onclick="return confirm('¿Está seguro de que desea eliminar este evento?');">Eliminar</a>
-    </td>
-  </tr>
-  </tbody>
-</table>
-
-<br>
-<a th:href="@{/proveedor/dashboard}">Volver al Dashboard</a>
+    <table class="event-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Ubicación</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="evento : ${eventosList}">
+            <td th:text="${evento.idEvento}"></td>
+            <td th:text="${evento.nombre}"></td>
+            <td th:text="${evento.descripcion}"></td>
+            <td th:text="${evento.ubicacion}"></td>
+            <td th:text="${#temporals.format(evento.fechaEvento, 'dd/MM/yyyy')}"></td>
+            <td th:text="${#temporals.format(evento.horaEvento, 'HH:mm')}"></td>
+            <td th:text="${evento.tipoEvento}"></td>
+            <td th:text="${evento.estado}"></td>
+            <td class="action-links">
+                <a th:href="@{/proveedor/eventos/editar/{id}(id=${evento.idEvento})}" class="edit-link">Editar</a>
+                <a th:href="@{/proveedor/eventos/cancelar/{id}(id=${evento.idEvento})}" class="cancel-link">Cancelar</a>
+                <a th:href="@{/proveedor/eventos/eliminar/{id}(id=${evento.idEvento})}"
+                   onclick="return confirm('¿Está seguro de que desea eliminar este evento?');" class="delete-link">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

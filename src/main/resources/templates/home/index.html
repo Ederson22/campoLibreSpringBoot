@@ -3,17 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <title>Bienvenido a Campo Libre</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Fondo blanco suave */
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .welcome-container {
+            background: #fff;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Efectos de fondo con degradado verde */
+        .welcome-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #a8e063, #56ab2f);
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .welcome-container::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #56ab2f, #a8e063);
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #555;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #777;
+            margin: 0;
+        }
+
+        .action-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-links li {
+            width: 180px;
+        }
+
+        .action-links a {
+            display: block;
+            padding: 15px 25px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-links a:first-child {
+            background: linear-gradient(to right, #a8e063, #56ab2f);
+            color: #fff;
+            border: none;
+        }
+
+        .action-links a:first-child:hover {
+            background: linear-gradient(to right, #56ab2f, #a8e063);
+            box-shadow: 0 6px 15px rgba(86, 171, 47, 0.4);
+        }
+
+        .action-links a:last-child {
+            background: #fff;
+            color: #56ab2f;
+            border: 2px solid #56ab2f;
+        }
+
+        .action-links a:last-child:hover {
+            background: #56ab2f;
+            color: #fff;
+            box-shadow: 0 6px 15px rgba(86, 171, 47, 0.4);
+        }
+    </style>
 </head>
 <body>
-<h1>¡Bienvenido a Campo Libre!</h1>
-<p>La plataforma para la compra y venta de productos de agricultores y ganaderos locales.</p>
-
-<br/>
-
-<h2>¿Qué quieres hacer?</h2>
-<ul>
-    <li><a href="/login">Iniciar Sesión</a></li>
-    <li><a href="/register">Registrarme</a></li>
-</ul>
+<div class="welcome-container">
+    <h1>¡Bienvenido a Campo Libre!</h1>
+    <p>La plataforma para la compra y venta de productos de agricultores y ganaderos locales.</p>
+    <h2>¿Qué quieres hacer?</h2>
+    <ul class="action-links">
+        <li><a href="/login">Iniciar Sesión</a></li>
+        <li><a href="/register">Registrarme</a></li>
+    </ul>
+</div>
 </body>
 </html>

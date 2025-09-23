@@ -1,68 +1,277 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Gestión de Productos</title>
-  <style>
-    body { font-family: Arial, sans-serif; }
-    form { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
-    label, input, select, button { margin-right: 10px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    a { text-decoration: none; color: #007bff; }
-    a:hover { text-decoration: underline; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Gestión de Productos</title>
+    <style>
+        /* ... Estilos CSS existentes ... */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-verde-oscuro: #56ab2f;
+            --color-verde-claro: #a8e063;
+            --color-fondo: #f0f2f5;
+            --color-texto-oscuro: #333;
+            --color-texto-gris: #777;
+            --color-borde-gris: #e0e0e0;
+            --color-rojo: #e53935;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-fondo);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--color-texto-oscuro);
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        /* Estilos del formulario de búsqueda */
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid var(--color-borde-gris);
+        }
+
+        .search-form label {
+            font-weight: 500;
+            color: var(--color-texto-oscuro);
+            align-self: center;
+        }
+
+        .search-form input,
+        .search-form select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            color: var(--color-texto-oscuro);
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-form input:focus,
+        .search-form select:focus {
+            border-color: var(--color-verde-oscuro);
+            outline: none;
+        }
+
+        .search-button,
+        .clear-link {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            background: #4b8b26;
+        }
+
+        .clear-link {
+            background-color: #fff;
+            color: var(--color-texto-gris);
+            border: 2px solid var(--color-borde-gris);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .clear-link:hover {
+            background-color: var(--color-borde-gris);
+            color: var(--color-texto-oscuro);
+        }
+
+        /* Botón de crear producto */
+        .create-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(to right, var(--color-verde-claro), var(--color-verde-oscuro));
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+            transition: background 0.3s ease;
+        }
+
+        .create-link:hover {
+            background: linear-gradient(to right, var(--color-verde-oscuro), var(--color-verde-claro));
+        }
+
+        /* Estilos de la tabla */
+        .product-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .product-table thead th {
+            background-color: var(--color-fondo);
+            color: var(--color-texto-gris);
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 15px;
+            border-bottom: 2px solid var(--color-borde-gris);
+        }
+
+        .product-table tbody tr {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .product-table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-table td {
+            padding: 15px;
+            border: none;
+            color: var(--color-texto-oscuro);
+        }
+
+        .product-table td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+        .product-table td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+
+        .action-links a {
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .edit-link {
+            color: var(--color-verde-oscuro);
+            background-color: #f0fdf4;
+        }
+
+        .edit-link:hover {
+            background-color: var(--color-verde-claro);
+            color: #fff;
+        }
+
+        .delete-link {
+            color: var(--color-rojo);
+            background-color: #ffebee;
+        }
+
+        .delete-link:hover {
+            background-color: var(--color-rojo);
+            color: #fff;
+        }
+
+        /* Estilos para la alerta de éxito */
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 0 auto 20px auto; /* Centra horizontalmente y añade margen inferior */
+            text-align: center;
+            max-width: 400px; /* Aquí se define el ancho máximo */
+        }
+    </style>
 </head>
 <body>
-<h1>Mis Productos</h1>
+<div class="main-container">
+    <h1>Mis Productos</h1>
 
-<form th:action="@{/proveedor/productos}" method="get">
-  <label for="nombre">Nombre:</label>
-  <input type="text" id="nombre" name="nombre" th:value="${param.nombre}">
+    <div th:if="${mensajeExito}" class="alert-success" role="alert">
+        <span th:text="${mensajeExito}"></span>
+    </div>
 
-  <label for="categoria">Categoría:</label>
-  <select id="categoria" name="categoria">
-    <option value="">-- Seleccionar Categoría --</option>
-    <option value="Frutas" th:selected="${param.categoria == 'Frutas'}">Frutas</option>
-    <option value="Verduras" th:selected="${param.categoria == 'Verduras'}">Verduras</option>
-    <option value="Lácteos" th:selected="${param.categoria == 'Lácteos'}">Lácteos</option>
-  </select>
+    <form th:action="@{/proveedor/productos}" method="get" class="search-form">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" th:value="${param.nombre}">
 
-  <label for="stock">Stock Máximo:</label>
-  <input type="number" id="stock" name="stock" th:value="${param.stock}">
+        <label for="categoria">Categoría:</label>
+        <select id="categoria" name="categoria">
+            <option value="">-- Seleccionar Categoría --</option>
+            <option value="Frutas" th:selected="${param.categoria == 'Frutas'}">Frutas</option>
+            <option value="Verduras" th:selected="${param.categoria == 'Verduras'}">Verduras</option>
+            <option value="Lácteos" th:selected="${param.categoria == 'Lácteos'}">Lácteos</option>
+            <option value="Granos" th:selected="${param.categoria == 'Granos'}">Granos</option>
+            <option value="Huevos" th:selected="${param.categoria == 'Huevos'}">Huevos</option>
+            <option value="Carnes" th:selected="${param.categoria == 'Carnes'}">Carnes</option>
+        </select>
 
-  <button type="submit">Buscar</button>
-  <a th:href="@{/proveedor/productos}" style="margin-left: 10px;">Limpiar Filtros</a>
-</form>
+        <label for="stock">Stock Máximo:</label>
+        <input type="number" id="stock" name="stock" th:value="${param.stock}">
 
-<a th:href="@{/proveedor/productos/crear}">Crear nuevo producto</a>
-<br/><br/>
+        <button type="submit" class="search-button">Buscar</button>
+        <a th:href="@{/proveedor/productos}" class="clear-link">Limpiar Filtros</a>
+    </form>
 
-<table>
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Nombre</th>
-    <th>Precio</th>
-    <th>Stock</th>
-    <th>Categoría</th>
-    <th>Acciones</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="producto : ${productos}">
-    <td th:text="${producto.idProducto}"></td>
-    <td th:text="${producto.nombre}"></td>
-    <td th:text="${producto.precio}"></td>
-    <td th:text="${producto.stock}"></td>
-    <td th:text="${producto.categoria}"></td>
-    <td>
-      <a th:href="@{'/proveedor/productos/editar/' + ${producto.idProducto}}">Editar</a>
-      <a th:href="@{'/proveedor/productos/eliminar/' + ${producto.idProducto}}" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Eliminar</a>
-    </td>
-  </tr>
-</table>
-<a th:href="@{/proveedor}" class="btn btn-secondary">Volver</a>
+    <a th:href="@{/proveedor/productos/crear}" class="create-link">Crear nuevo producto</a>
+    <br/><br/>
+
+    <table class="product-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Categoría</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="producto : ${productos}">
+            <td th:text="${producto.idProducto}"></td>
+            <td th:text="${producto.nombre}"></td>
+            <td th:text="${producto.precio}"></td>
+            <td th:text="${producto.stock}"></td>
+            <td th:text="${producto.categoria}"></td>
+            <td class="action-links">
+                <a th:href="@{'/proveedor/productos/editar/' + ${producto.idProducto}}" class="edit-link">Editar</a>
+                <a th:href="@{'/proveedor/productos/eliminar/' + ${producto.idProducto}}" class="delete-link" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const alertElement = document.querySelector('.alert-success');
+        if (alertElement) {
+            // Oculta la alerta después de 3 segundos
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 3000);
+        }
+    });
+</script>
+
 </body>
 </html>

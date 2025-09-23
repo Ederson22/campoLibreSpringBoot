@@ -3,28 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Fondo blanco suave */
+            margin: 0;
+            overflow: hidden; /* Evita barras de desplazamiento si los elementos flotantes se salen */
+        }
+
+        .login-container {
+            position: relative;
+            width: 380px;
+            height: 480px; /* Ajustado para el contenido */
+            background: #fff; /* Fondo blanco para el contenedor principal */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 40px; /* Espaciado interno */
+            box-sizing: border-box; /* Asegura que el padding no aumente el tamaño */
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #a8e063, #56ab2f); /* Verde degradado */
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .login-container::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #56ab2f, #a8e063); /* Verde degradado */
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            color: #333; /* Texto oscuro */
+            margin-bottom: 30px;
+            text-align: center;
+            z-index: 1; /* Asegura que el texto esté sobre los efectos */
+        }
+
+        .input-box {
+            position: relative;
+            width: 100%;
+            margin-bottom: 25px;
+            z-index: 1;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 12px 10px;
+            background: #f8f8f8; /* Un fondo ligeramente gris para los inputs */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            color: #333;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-box input:focus {
+            border-color: #56ab2f; /* Borde verde al enfocar */
+        }
+
+        .input-box label {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+            font-size: 0.9em;
+            pointer-events: none;
+            transition: 0.3s ease;
+        }
+
+        .input-box input:focus + label,
+        .input-box input:valid + label {
+            top: 0;
+            left: 10px;
+            font-size: 0.75em;
+            color: #56ab2f; /* Verde para la etiqueta flotante */
+            background: #fff;
+            padding: 0 5px;
+            border-radius: 3px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px 0;
+            background: linear-gradient(to right, #a8e063, #56ab2f); /* Botón con degradado verde */
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3); /* Sombra para el botón */
+            z-index: 1;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(to right, #56ab2f, #a8e063); /* Invertir degradado al pasar el ratón */
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            z-index: 1;
+        }
+
+        .success-message {
+            color: green;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            z-index: 1;
+        }
+
+        /* Enlaces adicionales */
+        .links {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            z-index: 1;
+        }
+
+        .links a {
+            color: #56ab2f; /* Verde para los enlaces */
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .links p {
+            color: #666;
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-<h2>Iniciar Sesión</h2>
 
-<div th:if="${param.error}">
-    <p style="color:red;">Email o contraseña inválidos.</p>
-</div>
+<div class="login-container">
+    <h2>Iniciar Sesión</h2>
 
-<div th:if="${param.logout}">
-    <p style="color:green;">Has cerrado sesión correctamente.</p>
-</div>
-
-<form th:action="@{/login}" method="post">
-    <div>
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="email"></div>
-    <div>
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="contrasena"></div>
-    <div>
-        <button type="submit">Iniciar Sesión</button>
+    <div th:if="${param.error}" class="error-message">
+        <p>Email o contraseña inválidos.</p>
     </div>
-</form>
+
+    <div th:if="${param.logout}" class="success-message">
+        <p>Has cerrado sesión correctamente.</p>
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="input-box">
+            <input type="text" id="username" name="email" required>
+            <label for="username">Email:</label>
+        </div>
+        <div class="input-box">
+            <input type="password" id="password" name="contrasena" required>
+            <label for="password">Contraseña:</label>
+        </div>
+        <div>
+            <button type="submit">Iniciar Sesión</button>
+        </div>
+    </form>
+
+    <div class="links">
+        <p>¿Olvidaste tu contraseña? <a href="#">Haz clic aquí</a></p>
+        <p>¿No tienes cuenta? <a href="#">Regístrate</a></p>
+    </div>
+</div>
+
 </body>
 </html>

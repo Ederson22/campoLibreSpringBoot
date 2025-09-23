@@ -3,17 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel de Consumidor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #56ab2f;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .user-info {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .role-text {
+            color: #56ab2f; /* Destacar el rol con un color */
+        }
+
+        .logout-button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin-top: 20px;
+            background-color: #dc3545;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body>
-<h1>¡Hola, Consumidor!</h1>
-<p>Bienvenido a tu página de inicio. Aquí podrás ver productos y eventos.</p>
+<div class="container">
+    <h1>¡Hola, Consumidor!</h1>
+    <p>Bienvenido a tu panel de control. Aquí podrás explorar nuestro catálogo de productos y eventos.</p>
 
-<div sec:authorize="isAuthenticated()">
-    <p>Has iniciado sesión como: <span sec:authentication="name"></span></p>
-    <p>Tu rol es: <span sec:authentication="authorities"></span></p>
+    <div class="user-info" sec:authorize="isAuthenticated()">
+        <p><span class="info-label">Has iniciado sesión como:</span> <span sec:authentication="name"></span></p>
+        <p><span class="info-label">Tu rol es:</span> <span class="role-text" sec:authentication="authorities"></span></p>
+    </div>
+
+    <a href="/logout" class="logout-button">Cerrar Sesión</a>
 </div>
-
-<br/>
-<a href="/logout">Cerrar Sesión</a>
 </body>
 </html>

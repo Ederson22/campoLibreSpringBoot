@@ -1,47 +1,170 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Editar Tienda</title>
+    <meta charset="UTF-8">
+    <title>Editar Tienda</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+          --color-verde-oscuro: #56ab2f;
+          --color-verde-claro: #a8e063;
+          --color-fondo: #f0f2f5;
+          --color-texto-oscuro: #333;
+          --color-texto-gris: #777;
+          --color-error: #e53935;
+        }
+
+        body {
+          font-family: 'Poppins', sans-serif;
+          background-color: var(--color-fondo);
+          margin: 0;
+          padding: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+        }
+
+        .edit-container {
+          background-color: #fff;
+          padding: 40px;
+          border-radius: 20px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          max-width: 600px;
+          width: 100%;
+        }
+
+        .edit-container h1 {
+          font-size: 2em;
+          color: var(--color-texto-oscuro);
+          margin-bottom: 25px;
+          text-align: center;
+          font-weight: 600;
+        }
+
+        .form-group {
+          margin-bottom: 20px;
+        }
+
+        .form-group label {
+          display: block;
+          font-weight: 500;
+          color: var(--color-texto-oscuro);
+          margin-bottom: 8px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 1em;
+          color: var(--color-texto-oscuro);
+          background-color: #f8f8f8;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+          border-color: var(--color-verde-oscuro);
+          outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group span {
+          display: block;
+          color: var(--color-error);
+          font-size: 0.85em;
+          margin-top: 5px;
+        }
+
+        .button-group {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 30px;
+        }
+
+        .save-button, .cancel-link {
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-button {
+          background: var(--color-verde-oscuro);
+          color: #fff;
+          border: none;
+          box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+        }
+
+        .save-button:hover {
+          background: #4b8b26;
+        }
+
+        .cancel-link {
+          background: #fff;
+          color: var(--color-texto-oscuro);
+          border: 2px solid #ccc;
+        }
+
+        .cancel-link:hover {
+            background: #e0e0e0;
+        }
+    </style>
 </head>
 <body>
-<h1>Editar Información de la Tienda</h1>
+<div class="edit-container">
+    <h1>Editar Información de la Tienda</h1>
 
-<form th:action="@{/proveedor/tienda/editar}" th:object="${tienda}" method="post">
-  <div>
-    <label for="nombre">Nombre de la Tienda:</label>
-    <input type="text" id="nombre" th:field="*{nombre}">
-    <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
-  </div>
-  <div>
-    <label for="descripcion">Descripción:</label>
-    <textarea id="descripcion" th:field="*{descripcion}"></textarea>
-    <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
-  </div>
-  <div>
-    <label for="correoTienda">Correo Electrónico:</label>
-    <input type="email" id="correoTienda" th:field="*{correoTienda}">
-    <span th:if="${#fields.hasErrors('correoTienda')}" th:errors="*{correoTienda}"></span>
-  </div>
-  <div>
-    <label for="telefonoTienda">Teléfono:</label>
-    <input type="text" id="telefonoTienda" th:field="*{telefonoTienda}">
-    <span th:if="${#fields.hasErrors('telefonoTienda')}" th:errors="*{telefonoTienda}"></span>
-  </div>
-  <div>
-    <label for="ubicacion">Ubicación:</label>
-    <input type="text" id="ubicacion" th:field="*{ubicacion}">
-    <span th:if="${#fields.hasErrors('ubicacion')}" th:errors="*{ubicacion}"></span>
-  </div>
-  <div>
-    <label for="imagenTienda">URL de la Imagen:</label>
-    <input type="text" id="imagenTienda" th:field="*{imagenTienda}">
-    <span th:if="${#fields.hasErrors('imagenTienda')}" th:errors="*{imagenTienda}"></span>
-  </div>
-  <button type="submit">Guardar Cambios</button>
-</form>
+    <form th:action="@{/proveedor/tienda/editar}" th:object="${tienda}" method="post">
+        <div class="form-group">
+            <label for="nombre">Nombre de la Tienda:</label>
+            <input type="text" id="nombre" th:field="*{nombre}">
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+        </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" th:field="*{descripcion}"></textarea>
+            <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
+        </div>
+        <div class="form-group">
+            <label for="correoTienda">Correo Electrónico:</label>
+            <input type="email" id="correoTienda" th:field="*{correoTienda}">
+            <span th:if="${#fields.hasErrors('correoTienda')}" th:errors="*{correoTienda}"></span>
+        </div>
+        <div class="form-group">
+            <label for="telefonoTienda">Teléfono:</label>
+            <input type="text" id="telefonoTienda" th:field="*{telefonoTienda}">
+            <span th:if="${#fields.hasErrors('telefonoTienda')}" th:errors="*{telefonoTienda}"></span>
+        </div>
+        <div class="form-group">
+            <label for="ubicacion">Ubicación:</label>
+            <input type="text" id="ubicacion" th:field="*{ubicacion}">
+            <span th:if="${#fields.hasErrors('ubicacion')}" th:errors="*{ubicacion}"></span>
+        </div>
+        <div class="form-group">
+            <label for="imagenTienda">URL de la Imagen:</label>
+            <input type="text" id="imagenTienda" th:field="*{imagenTienda}">
+            <span th:if="${#fields.hasErrors('imagenTienda')}" th:errors="*{imagenTienda}"></span>
+        </div>
 
-<br/>
-<a th:href="@{/proveedor/tienda/ver}">Cancelar</a>
+        <div class="button-group">
+            <a th:href="@{/proveedor/tienda/ver}" class="cancel-link">Cancelar</a>
+            <button type="submit" class="save-button">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

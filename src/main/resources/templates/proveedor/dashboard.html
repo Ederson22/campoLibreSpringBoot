@@ -3,21 +3,152 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard del Proveedor</title>
+    <title>Tienda Creada</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-verde-oscuro: #56ab2f;
+            --color-verde-claro: #a8e063;
+            --color-fondo: #f0f2f5;
+            --color-texto-oscuro: #333;
+            --color-texto-gris: #777;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-fondo);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .confirmation-container {
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Círculos flotantes de fondo */
+        .confirmation-container::before,
+        .confirmation-container::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--color-verde-claro), var(--color-verde-oscuro));
+            opacity: 0.15;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .confirmation-container::before {
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+        }
+
+        .confirmation-container::after {
+            bottom: -50px;
+            right: -50px;
+            width: 120px;
+            height: 120px;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: var(--color-verde-oscuro);
+            margin-bottom: 5px;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: var(--color-texto-oscuro);
+            margin-top: 0;
+            margin-bottom: 10px;
+            z-index: 1;
+        }
+
+        p {
+            font-size: 1em;
+            color: var(--color-texto-gris);
+            margin-bottom: 30px;
+            z-index: 1;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+            z-index: 1;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: #fff;
+            background-color: var(--color-verde-oscuro);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+        }
+
+        .nav-link:hover {
+            background-color: #4b8b26;
+            transform: translateY(-2px);
+        }
+
+        .logout-button {
+            padding: 12px 25px;
+            background-color: #fff;
+            color: #e53935;
+            border: 2px solid #e53935;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .logout-button:hover {
+            background-color: #e53935;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
+        }
+    </style>
 </head>
 <body>
-<h1>¡Felicidades!</h1>
-<h2>Tu tienda ha sido creada exitosamente.</h2>
-<p>Bienvenido a tu panel de control. Desde aquí podrás gestionar tus productos, pedidos y la información de tu tienda.</p>
+<div class="confirmation-container">
+    <h1>¡Felicidades!</h1>
+    <h2>Tu tienda ha sido creada exitosamente.</h2>
+    <p>Bienvenido a tu panel de control. Desde aquí podrás gestionar tus productos, pedidos y la información de tu tienda.</p>
 
-<ul>
-    <li><a th:href="@{/proveedor/tienda/ver}">Ver mi tienda</a></li>
-    <li><a th:href="@{/proveedor/productos}">Gestionar productos</a></li>
-    <li><a th:href="@{/proveedor/eventos}" class="btn btn-info">Gestionar Eventos</a></li>
-</ul>
+    <ul>
+        <li><a th:href="@{/proveedor/tienda/ver}" class="nav-link">Ver mi tienda</a></li>
+        <li><a th:href="@{/proveedor/productos}" class="nav-link">Gestionar productos</a></li>
+        <li><a th:href="@{/proveedor/eventos}" class="nav-link">Gestionar Eventos</a></li>
+    </ul>
 
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Cerrar Sesión</button>
-</form>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="logout-button">Cerrar Sesión</button>
+    </form>
+</div>
 </body>
 </html>

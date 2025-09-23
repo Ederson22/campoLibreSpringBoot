@@ -1,46 +1,165 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Editar Evento</title>
+    <meta charset="UTF-8">
+    <title>Editar Evento</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-verde-oscuro: #56ab2f;
+            --color-verde-claro: #a8e063;
+            --color-fondo: #f0f2f5;
+            --color-texto-oscuro: #333;
+            --color-texto-gris: #777;
+            --color-borde-gris: #e0e0e0;
+            --color-rojo: #e53935;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-fondo);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--color-texto-oscuro);
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-texto-oscuro);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--color-borde-gris);
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-verde-oscuro);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .submit-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(to right, var(--color-verde-claro), var(--color-verde-oscuro));
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(86, 171, 47, 0.3);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .submit-button:hover {
+            background: linear-gradient(to right, var(--color-verde-oscuro), var(--color-verde-claro));
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: transparent;
+            color: var(--color-texto-oscuro);
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: var(--color-borde-gris);
+            color: var(--color-texto-oscuro);
+        }
+    </style>
 </head>
 <body>
-<h1>Editar Evento</h1>
+<div class="main-container">
+    <h1>Editar Evento</h1>
 
-<form th:action="@{/proveedor/eventos/actualizar}" th:object="${eventoDto}" method="post">
-  <input type="hidden" th:field="*{idEvento}"/>
+    <form th:action="@{/proveedor/eventos/actualizar}" th:object="${eventoDto}" method="post">
+        <input type="hidden" th:field="*{idEvento}"/>
 
-  <div>
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" th:field="*{nombre}" required>
-  </div>
-  <div>
-    <label for="descripcion">Descripción:</label>
-    <textarea id="descripcion" th:field="*{descripcion}" required></textarea>
-  </div>
-  <div>
-    <label for="ubicacion">Ubicación:</label>
-    <input type="text" id="ubicacion" th:field="*{ubicacion}" required>
-  </div>
-  <div>
-    <label for="fechaEvento">Fecha del Evento:</label>
-    <input type="date" id="fechaEvento" th:field="*{fechaEvento}" required>
-  </div>
-  <div>
-    <label for="horaEvento">Hora del Evento:</label>
-    <input type="time" id="horaEvento" th:field="*{horaEvento}" required>
-  </div>
-  <div>
-    <label for="tipoEvento">Tipo de Evento:</label>
-    <select id="tipoEvento" th:field="*{tipoEvento}" required>
-      <option th:each="tipo : ${tiposEvento}" th:value="${tipo}" th:text="${tipo}"></option>
-    </select>
-  </div>
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}" required>
+        </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" th:field="*{descripcion}" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="ubicacion">Ubicación:</label>
+            <input type="text" id="ubicacion" th:field="*{ubicacion}" required>
+        </div>
+        <div class="form-group">
+            <label for="fechaEvento">Fecha del Evento:</label>
+            <input type="date" id="fechaEvento" th:field="*{fechaEvento}" required>
+        </div>
+        <div class="form-group">
+            <label for="horaEvento">Hora del Evento:</label>
+            <input type="time" id="horaEvento" th:field="*{horaEvento}" required>
+        </div>
+        <div class="form-group">
+            <label for="tipoEvento">Tipo de Evento:</label>
+            <select id="tipoEvento" th:field="*{tipoEvento}" required>
+                <option th:each="tipo : ${tiposEvento}" th:value="${tipo}" th:text="${tipo}"></option>
+            </select>
+        </div>
 
-  <button type="submit">Actualizar Evento</button>
-</form>
-
-<br>
-<a th:href="@{/proveedor/eventos}">Volver a la Gestión de Eventos</a>
+        <div class="button-group">
+            <a th:href="@{/proveedor/eventos}" class="back-link">Cancelar</a>
+            <button type="submit" class="submit-button">Actualizar Evento</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>
