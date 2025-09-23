@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Eventos</title>
+</head>
+<body>
+<h1>Gestión de Eventos</h1>
+
+<a th:href="@{/proveedor/eventos/crear}">Crear nuevo evento</a>
+
+<br><br>
+
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Descripción</th>
+    <th>Ubicación</th>
+    <th>Fecha</th>
+    <th>Hora</th>
+    <th>Tipo</th>
+    <th>Estado</th>
+    <th>Acciones</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="evento : ${eventosList}">
+    <td th:text="${evento.idEvento}">ID</td>
+    <td th:text="${evento.nombre}">Nombre</td>
+    <td th:text="${evento.descripcion}">Descripción</td>
+    <td th:text="${evento.ubicacion}">Ubicación</td>
+    <td th:text="${#temporals.format(evento.fechaEvento, 'dd/MM/yyyy')}">Fecha</td>
+    <td th:text="${#temporals.format(evento.horaEvento, 'HH:mm')}">Hora</td>
+    <td th:text="${evento.tipoEvento}">Tipo</td>
+    <td th:text="${evento.estado}">Estado</td>
+    <td>
+      <a th:href="@{/proveedor/eventos/editar/{id}(id=${evento.idEvento})}">Editar</a> |
+      <a th:href="@{/proveedor/eventos/cancelar/{id}(id=${evento.idEvento})}">Cancelar</a> |
+      <a th:href="@{/proveedor/eventos/eliminar/{id}(id=${evento.idEvento})}"
+         onclick="return confirm('¿Está seguro de que desea eliminar este evento?');">Eliminar</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<br>
+<a th:href="@{/proveedor/dashboard}">Volver al Dashboard</a>
+</body>
+</html>

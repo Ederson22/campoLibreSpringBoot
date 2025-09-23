@@ -25,14 +25,23 @@
     </li>
 </ul>
 
+<h2>Gestión de Eventos</h2>
+<ul>
+    <li>
+        <a th:href="@{/proveedor/eventos}">Gestionar Eventos</a>
+    </li>
+</ul>
+
 <h2>Comunicación con el Administrador</h2>
 <ul>
     <li>
         <a th:href="@{/proveedor/pqrs}">PQRS</a>
     </li>
 </ul>
+
 <form th:action="@{/logout}" method="post">
     <button type="submit">Cerrar Sesión</button>
 </form>
+
 </body>
 </html>

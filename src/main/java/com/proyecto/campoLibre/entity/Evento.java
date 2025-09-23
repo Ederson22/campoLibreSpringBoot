@@ -1,5 +1,3 @@
-// Archivo: src/main/java/com/proyecto/campoLibre/entity/Evento.java
-
 package com.proyecto.campoLibre.entity;
 
 import jakarta.persistence.*;
@@ -7,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "evento")
@@ -30,17 +29,20 @@ public class Evento {
     private String ubicacion;
 
     @Column(name = "fecha_evento")
-    @Temporal(TemporalType.DATE)
-    private Date fecha_evento;
+    private LocalDate fechaEvento;  // ✅ antes era Date
 
     @Column(name = "hora_evento")
-    private String hora_evento; // Puedes usar java.time.LocalTime si prefieres
+    private LocalTime horaEvento;   // ✅ antes era String
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_evento")
-    private TipoEvento tipo_evento;
+    private TipoEvento tipoEvento;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado")
+    private EstadoEvento estado;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creado_por")
-    private Usuario creado_por;
+    private Usuario creador;
 }

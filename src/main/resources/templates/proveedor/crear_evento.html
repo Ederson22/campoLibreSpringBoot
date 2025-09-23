@@ -2,47 +2,54 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Evento</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Editar Evento</title>
 </head>
 <body>
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <h2>Crear Nuevo Evento</h2>
-            <form action="#" th:action="@{/proveedor/eventos/guardar}" th:object="${evento}" method="post">
-                <div class="form-group">
-                    <label for="nombre">Nombre del Evento:</label>
-                    <input type="text" th:field="*{nombre}" id="nombre" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="descripcion">Descripción:</label>
-                    <textarea th:field="*{descripcion}" id="descripcion" class="form-control" rows="4" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="ubicacion">Ubicación:</label>
-                    <input type="text" th:field="*{ubicacion}" id="ubicacion" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="fecha_evento">Fecha del Evento:</label>
-                    <input type="date" th:field="*{fecha_evento}" id="fecha_evento" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="hora_evento">Hora del Evento:</label>
-                    <input type="time" th:field="*{hora_evento}" id="hora_evento" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="tipo_evento">Tipo de Evento:</label>
-                    <select th:field="*{tipo_evento}" id="tipo_evento" class="form-control" required>
-                        <option value="">-- Seleccione un tipo --</option>
-                        <option th:each="tipo : ${tiposEvento}" th:value="${tipo}" th:text="${tipo}"></option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Guardar Evento</button>
-                <a th:href="@{/proveedor/eventos}" class="btn btn-secondary ml-2">Cancelar</a>
-            </form>
-        </div>
+<h1>Editar Evento</h1>
+
+<form th:action="@{/proveedor/eventos/editar/{id}(id=${eventoDto.idEvento})}"
+      th:object="${eventoDto}"
+      method="post">
+
+    <!-- ID oculto -->
+    <input type="hidden" th:field="*{idEvento}"/>
+
+    <div>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" th:field="*{nombre}" required>
     </div>
-</div>
+
+    <div>
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" th:field="*{descripcion}" required></textarea>
+    </div>
+
+    <div>
+        <label for="ubicacion">Ubicación:</label>
+        <input type="text" id="ubicacion" th:field="*{ubicacion}" required>
+    </div>
+
+    <div>
+        <label for="fechaEvento">Fecha del Evento:</label>
+        <input type="date" id="fechaEvento" th:field="*{fechaEvento}" required>
+    </div>
+
+    <div>
+        <label for="horaEvento">Hora del Evento:</label>
+        <input type="time" id="horaEvento" th:field="*{horaEvento}" required>
+    </div>
+
+    <div>
+        <label for="tipoEvento">Tipo de Evento:</label>
+        <select id="tipoEvento" th:field="*{tipoEvento}" required>
+            <option th:each="tipo : ${tiposEvento}" th:value="${tipo}" th:text="${tipo}"></option>
+        </select>
+    </div>
+
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+<br>
+<a th:href="@{/proveedor/eventos}">Volver a la Gestión de Eventos</a>
 </body>
 </html>

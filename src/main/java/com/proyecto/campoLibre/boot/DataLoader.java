@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Component
@@ -151,10 +153,10 @@ public class DataLoader implements CommandLineRunner {
         evento1.setNombre("Feria Artesanal");
         evento1.setDescripcion("Gran feria con productos de artesanos locales.");
         evento1.setUbicacion("Parque Central");
-        evento1.setFecha_evento(new Date());
-        evento1.setHora_evento("10:00 AM");
-        evento1.setTipo_evento(TipoEvento.TALLER);
-        evento1.setCreado_por(usuario1);
+        evento1.setFechaEvento(LocalDate.now());
+        evento1.setHoraEvento(LocalTime.of(10, 0));;
+        evento1.setTipoEvento(TipoEvento.TALLER);
+        evento1.setCreador(usuario1);
         eventoRepository.save(evento1);
 
         // 6. Crear un PQRS de prueba

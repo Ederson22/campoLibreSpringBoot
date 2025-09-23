@@ -343,33 +343,102 @@ public class ProveedorController {
 
 
     //___________________________________EVENTOS_________________________________
+    @GetMapping("/eventos")
+    public String gestionEventos(Model model, Authentication authentication) {
+        String email = authentication.getName();
+        Optional<Usuario> usuarioOptional = usuarioService.findByEmail(email);
+        if (usuarioOptional.isPresent()) {
+            Long idUsuario = usuarioOptional.get().getIdUsuario();
+            List<Evento> eventosList = eventoService.obtenerEventosPorCreador(idUsuario);
+            model.addAttribute("eventosList", eventosList);
+            return "proveedor/gestion_eventos";
+        }
+        return "redirect:/proveedor/dashboard";
+    }
+
     @GetMapping("/eventos/crear")
     public String crearEvento(Model model) {
-        // Ahora pasas un EventoDto al modelo
-        model.addAttribute("evento", new EventoDto());
+        model.addAttribute("eventoDto", new EventoDto());
         model.addAttribute("tiposEvento", TipoEvento.values());
         return "proveedor/crear_evento";
     }
 
     @PostMapping("/eventos/guardar")
-    public String guardarEvento(@ModelAttribute EventoDto eventoDto, Authentication authentication) {
+    public String guardarEvento(@Valid @ModelAttribute("eventoDto") EventoDto eventoDto,
+                                BindingResult result,
+                                Model model,
+                                Authentication authentication) {
+        if (result.hasErrors()) {
+            model.addAttribute("eventoDto", eventoDto);
+            model.addAttribute("tiposEvento", TipoEvento.values());
+            return "proveedor/crear_evento";
+        }
 
-        // Obten el usuario creador
         String emailUsuario = authentication.getName();
         Usuario creador = usuarioService.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Mapea los datos del DTO a la entidad Evento
         Evento evento = new Evento();
         evento.setNombre(eventoDto.getNombre());
         evento.setDescripcion(eventoDto.getDescripcion());
         evento.setUbicacion(eventoDto.getUbicacion());
-        evento.setFecha_evento(eventoDto.getFecha_evento());
-        evento.setHora_evento(eventoDto.getHora_evento());
-        evento.setTipo_evento(eventoDto.getTipo_evento());
+        evento.setFechaEvento(eventoDto.getFechaEvento()); // ✅ LocalDate
+        evento.setHoraEvento(eventoDto.getHoraEvento());   // ✅ LocalTime
+        evento.setTipoEvento(eventoDto.getTipoEvento());
+        evento.setEstado(EstadoEvento.PENDIENTE);
 
-        // Guarda la entidad con el usuario creador
         eventoService.guardarEvento(evento, creador);
+
+        return "redirect:/proveedor/eventos";
+    }
+
+
+    @GetMapping("/eventos/editar/{id}")
+    public String showEditarEventoForm(@PathVariable("id") Long id, Model model) {
+        Optional<Evento> eventoOptional = eventoService.obtenerEventoPorId(id);
+        if (eventoOptional.isPresent()) {
+            Evento evento = eventoOptional.get();
+
+            // Convertir entidad -> DTO
+            EventoDto eventoDto = new EventoDto();
+            eventoDto.setIdEvento(evento.getIdEvento());
+            eventoDto.setNombre(evento.getNombre());
+            eventoDto.setDescripcion(evento.getDescripcion());
+            eventoDto.setUbicacion(evento.getUbicacion());
+            eventoDto.setFechaEvento(evento.getFechaEvento());
+            eventoDto.setHoraEvento(evento.getHoraEvento());
+            eventoDto.setTipoEvento(evento.getTipoEvento());
+
+            model.addAttribute("eventoDto", eventoDto);
+            model.addAttribute("tiposEvento", TipoEvento.values());
+            return "proveedor/editar_evento";
+        }
+        return "redirect:/proveedor/eventos";
+    }
+
+    @PostMapping("/eventos/editar/{id}")
+    public String editarEvento(@PathVariable("id") Long id,
+                               @Valid @ModelAttribute("eventoDto") EventoDto eventoDto,
+                               BindingResult result,
+                               Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("tiposEvento", TipoEvento.values());
+            return "proveedor/editar_evento";
+        }
+
+        eventoService.actualizarEvento(id, eventoDto);
+        return "redirect:/proveedor/eventos";
+    }
+
+    @GetMapping("/eventos/cancelar/{id}")
+    public String cancelarEvento(@PathVariable("id") Long id) {
+        eventoService.cancelarEvento(id);
+        return "redirect:/proveedor/eventos";
+    }
+
+    @GetMapping("/eventos/eliminar/{id}")
+    public String eliminarEvento(@PathVariable("id") Long id) {
+        eventoService.eliminarEvento(id);
         return "redirect:/proveedor/eventos";
     }
 
